@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ApiMapper">
+	<select id="getUserRel" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+		SELECT * FROM tbl_user_rel WHERE
+		USERNAME = #{USERNAME} AND HID = #{HID}
+	</select>
+
+	<select id="getUserRelList" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+		SELECT * FROM tbl_user_rel WHERE
+		USERNAME = #{USERNAME}
+	</select>
+
+	<select id="getUserRelListByMphone" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+		SELECT * FROM tbl_user_rel WHERE
+		MPHONE = #{MPHONE}
+	</select>
+
+
+	<select id="getOrg" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+		SELECT * FROM tbl_org WHERE
+		ORGNAME = #{ORGNAME}
+	</select>
+
+
+	<select id="getProduct" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+		SELECT * FROM tbl_product WHERE
+		PID = #{PID} and ORGNAME = #{ORGNAME}
+	</select>
+
+	<select id="getFeeProduct" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+		SELECT * FROM tbl_product WHERE
+		PAY_MODE = 0 and ORGNAME = #{ORGNAME}
+	</select>
+
+	<select id="getAllProduct" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+		SELECT * FROM tbl_product WHERE ORGNAME = #{ORGNAME}
+	</select>
+
+	<select id="getUserObjectRule" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+		SELECT r.*,p.FEE_PERIOD_UNIT,p.TYPE,p.PID
+		FROM tb_object_rule r inner join tbl_product p on r.PRODUCT_ID = p.PID WHERE r.SRC_TYPE = 0 and r.SRC = #{SRC} AND r.OBJECT_TYPE = 0
+		AND r.END_TIME > #{END_TIME} and p.ORGNAME = #{ORGNAME}
+	</select>
+
+
+	<select id="getUserObjectRuleObjectId" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+		SELECT r.OBJECT_ID as roomId
+		FROM tb_object_rule r WHERE r.SRC_TYPE = 0 and r.SRC = #{SRC} AND r.OBJECT_TYPE = 0
+		AND r.END_TIME > #{END_TIME}
+	</select>
+
+
+	<select id="getUserObjectRuleByObjectId" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+		SELECT p.*
+		FROM tb_object_rule r inner join tbl_product p on r.PRODUCT_ID = p.PID WHERE r.OBJECT_ID = #{OBJECT_ID} and r.OBJECT_TYPE = 0
+		AND r.END_TIME > #{END_TIME}
+	</select>
+
+	<select id="getUserRelByUidAndHid" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+		SELECT * FROM tbl_user_rel WHERE USERNAME = #{USERNAME} and HID = #{HID}
+	</select>
+
+	<select id="getUserObjectRuleByUserPid" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+		SELECT r.ID
+		FROM tb_object_rule r WHERE
+		r.SRC_TYPE = 0 and r.SRC = #{SRC} AND r.OBJECT_TYPE = 0
+		<![CDATA[ AND r.END_TIME > #{END_TIME} and r.START_TIME <= #{END_TIME} AND (r.PRODUCT_ID = '201661' or r.PRODUCT_ID = '201662')]]>
+	</select>
+
+
+	<select id="getUserObjectRuleByPid" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+		SELECT *
+		FROM tb_object_rule r WHERE r.SRC_TYPE = 0 and r.SRC = #{SRC} AND r.OBJECT_TYPE = 0 AND r.PRODUCT_ID = #{PID}
+		<![CDATA[ AND r.END_TIME > #{END_TIME} and r.START_TIME <= #{END_TIME} ]]>
+	</select>
+
+
+	<select id="getUserFeeProduct" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+		SELECT *
+		FROM tbl_fee_product  WHERE USERNAME = #{USERNAME} and PID = #{PID} and IS_VALID = #{IS_VALID}
+		<![CDATA[ AND END_TIME > #{END_TIME} ]]>
+	</select>
+
+</mapper>
