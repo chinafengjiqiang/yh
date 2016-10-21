@@ -65,7 +65,6 @@ public class UserService implements IUserService{
         cell3.setCellValue(SpringUtil.getMessage("user.mohone"));
 
         List<IACEntry> roleList = dicService.getDicByType(TEARCH_ROLE);
-        System.out.println(roleList.size());
         return wb;
     }
 }
