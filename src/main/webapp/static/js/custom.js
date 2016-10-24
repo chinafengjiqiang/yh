@@ -356,8 +356,8 @@ function attachSelectBox(oInputField,value,url){
         var options = new Array();
         for (var i=0;i<data.length;i++){
             option = document.createElement('Option');
-            option.text = data[i].name;
-            option.value = data[i].value;
+            option.text = data[i].iacMap.NAME;
+            option.value = data[i].iacMap.NID;
             try{
                 oInputField.add(option,null);
             }catch(ex){

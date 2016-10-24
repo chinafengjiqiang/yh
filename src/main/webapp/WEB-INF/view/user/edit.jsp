@@ -11,12 +11,27 @@
 
                 <form role="form" name="labelForm" id="labelForm">
                     <div class="form-group" hidden>
-                        <label >标签序号：</label>
-                        <input type="text" class="form-control" id="id" name="id">
+                        <label >用户序号：</label>
+                        <input type="text" class="form-control" id="ID" name="ID">
                     </div>
                     <div class="form-group">
-                        <label >标签名称：</label>
-                        <input type="text" class="form-control" id="name" name="name" placeholder="请输入标签名称">
+                        <label>用户名：</label>
+                        <input type="text" class="form-control" id="USERNAME" name="USERNAME" placeholder="请输入用户名">
+                    </div>
+                    <div class="form-group">
+                        <label>姓名：</label>
+                        <input type="text" class="form-control" id="TRUENAME" name="TRUENAME" placeholder="请输入姓名">
+                    </div>
+                    <div class="form-group">
+                        <label>任教科目：</label>
+                            <select id="ROLE" name="ROLE" class="select"></select>
+                        <script type="text/javascript">
+                            attachSelectBox(document.getElementById("ROLE"),'1',fq.contextPath+"/dic?type=TEARCH_ROLE");
+                        </script>
+                    </div>
+                    <div class="form-group">
+                        <label>手机号码：</label>
+                        <input type="text" class="form-control" id="MPHONE" name="MPHONE">
                     </div>
                     <button type="submit" class="btn btn-success">提交</button>
                     <button data-dismiss="modal" class="btn btn-cancel" type="button">取消</button>

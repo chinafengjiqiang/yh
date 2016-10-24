@@ -20,8 +20,10 @@
                                         <div class="col-md-4">
                                             <button href="#labelModal" data-toggle="modal" type="button" id="add"
                                                     class="btn btn-success">&nbsp;&nbsp;添&nbsp;&nbsp;&nbsp;加&nbsp;&nbsp;</button>
-                                            <button type="button" class="btn btn-danger" onclick="delBatch('TBL_LABEL','ID',table)">批量删除</button>
                                             <button type="button" id="exportTmp" class="btn btn-success" onclick="exportTemplate();">下载模板</button>
+                                            <button href="#labelModal" data-toggle="modal" type="button" id="add_batch"
+                                                    class="btn btn-success">批量导入</button>
+                                            <button type="button" class="btn btn-danger" onclick="delBatch('TBL_LABEL','ID',table)">批量删除</button>
                                         </div>
                                         <div class="bread-crumb pull-right">
                                             <form action="" class="">
@@ -85,10 +87,12 @@
 
     formValidate = $("#labelForm").validate({
         rules : {
-            name : "required",
+            USERNAME : "required",
+            TRUENAME : "required",
         },
         messages : {
-            name : "请输入标签名称",
+            USERNAME : "请输入用户名",
+            TRUENAME : "请输入姓名",
         },
         submitHandler:function(form){
             submitForm('labelForm','sm/label/save',table,$('#labelModal'));
