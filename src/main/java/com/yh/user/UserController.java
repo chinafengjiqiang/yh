@@ -1,6 +1,10 @@
 package com.yh.user;
 
 import com.yh.model.DataModel;
+import com.yh.model.RetVO;
+import com.yh.utils.AppConstants;
+import com.yh.utils.ParamUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,7 +24,7 @@ import java.util.List;
  */
 
 @Controller
-@RequestMapping("/user")
+@RequestMapping("/manage/user")
 public class UserController {
 
     @Autowired
@@ -62,5 +66,28 @@ public class UserController {
             e.printStackTrace();
         }
     }
+
+
+    @RequestMapping(value = "save")
+    @ResponseBody
+    public RetVO saveUser(HttpServletRequest request){
+        RetVO ret = new RetVO();
+        boolean res = false;
+        try {
+            HashMap<String,String> user = ParamUtils.getParameters(request);
+            user.put("USER_TYPE", AppConstants.USER_TYPE_TEARCH+"");
+            if(StringUtils.isBlank(user.get("id"))){
+                res = userService.saveUser(user);
+            }else{
+
+            }
+            ret.setSuccess(res);
+        }catch (Exception e){
+            e.printStackTrace();
+            ret.setSuccess(false);
+        }
+        return ret;
+    }
 }
+
 

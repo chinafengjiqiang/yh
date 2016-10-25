@@ -15,4 +15,6 @@ public interface IUserService {
     HashMap<String,Object> getUserList(DataModel dataModel);
 
     HSSFWorkbook exportTemplate();
+
+    boolean saveUser(HashMap<String,String> user);
 }

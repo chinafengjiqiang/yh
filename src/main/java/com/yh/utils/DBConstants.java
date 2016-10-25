@@ -6,4 +6,6 @@ package com.yh.utils;
 public interface DBConstants {
     String TBL_DIC_NAME = "tbl_dic";
 
+    String TBL_USER_NAME = "tbl_user";
+
 }

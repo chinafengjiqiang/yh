@@ -23,6 +23,18 @@ public class DicController {
     @RequestMapping
     @ResponseBody
     public List<IACEntry> getSelectBox(@RequestParam String type){
-        return dicService.getDicByType(type);
+        List<IACEntry> dicList = dicService.getDicByType(type);
+        return dicList;
+    }
+
+    @RequestMapping(value = "getDicText")
+    @ResponseBody
+    public String getDicText(@RequestParam String type,@RequestParam int nid){
+        String text = "";
+        IACEntry entry = dicService.getDicText(type,nid);
+        if(entry != null){
+            text = entry.getValueAsString("NAME");
+        }
+        return text;
     }
 }

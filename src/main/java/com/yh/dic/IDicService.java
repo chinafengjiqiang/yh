@@ -9,4 +9,6 @@ import java.util.List;
  */
 public interface IDicService {
     List<IACEntry> getDicByType(String type);
+
+    IACEntry getDicText(String type,int nid);
 }

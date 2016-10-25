@@ -1,5 +1,7 @@
 package com.yh.utils;
 
+import cn.com.iactive.db.IACEntry;
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -75,4 +77,12 @@ public class ObjUtils {
         return list != null && list.size() > 0;
     }
 
+
+    public static boolean isBlankIACEntryList(List<IACEntry> list){
+        return list == null || list.size() == 0;
+    }
+
+    public static boolean isNotBlankIACEntryList(List<IACEntry> list){
+        return list != null && list.size() > 0;
+    }
 }

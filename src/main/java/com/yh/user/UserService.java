@@ -5,6 +5,7 @@ import cn.com.iactive.db.IACEntry;
 import com.yh.dic.IDicService;
 import com.yh.model.DataModel;
 import com.yh.utils.AppConstants;
+import com.yh.utils.DBConstants;
 import com.yh.utils.SpringUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.*;
@@ -101,5 +102,9 @@ public class UserService implements IUserService{
             }
         }
         return textArr;
+    }
+
+    public boolean saveUser(HashMap<String, String> user) {
+        return iacDB.insertDynamic(DBConstants.TBL_USER_NAME,user);
     }
 }

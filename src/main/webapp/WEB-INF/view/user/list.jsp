@@ -35,8 +35,10 @@
                                 </div>
                                 <thead>
                                 <tr>
+                                    <th>用户ID</th>
                                     <th>用户名</th>
                                     <th>姓名</th>
+                                    <th>任教科目</th>
                                     <th>手机号码</th>
                                     <th>操作</th>
                                 </tr>
@@ -60,9 +62,18 @@
 <script type="text/javascript">
     var table;
     var formValidate;
+    var dicMap;
     var columns = [
+        {'data':'ID'},
         {'data':'USERNAME'},
         {'data':'TRUENAME'},
+        {
+            'data':'ROLE',
+            'render':function(data,type,full){
+                var name = dicMap.get(data);
+                return name;
+            }
+        },
         {'data':'MPHONE'},
         {
             'data':null,
@@ -74,7 +85,8 @@
         }
     ];
     $(function(){
-        table = DataTablePack.serverTable($('#table'),'user/getUserList',null,columns,0);
+        dicMap = getDicList("TEARCH_ROLE");
+        table = DataTablePack.serverTable($('#table'),'manage/user/getUserList',null,columns,0);
     });
 
 
@@ -89,39 +101,44 @@
         rules : {
             USERNAME : "required",
             TRUENAME : "required",
+            ROLE : "required",
         },
         messages : {
             USERNAME : "请输入用户名",
             TRUENAME : "请输入姓名",
+            ROLE : "请选择任教科目",
         },
         submitHandler:function(form){
-            submitForm('labelForm','sm/label/save',table,$('#labelModal'));
+            submitForm('labelForm','manage/user/save',table,$('#labelModal'));
         }
     });
 
     $(document).ready(function(){
         $('#table tbody').on('click', '.edit', function () {
-            $("#id").val($('td', this.parentNode.parentNode).eq(0).text());
-            $("#name").val($('td', this.parentNode.parentNode).eq(1).text());
+            $("#ID").val(getTbodyValue(this,0));
+            $("#USERNAME").val(getTbodyValue(this,1));
+            $("#TRUENAME").val(getTbodyValue(this,2));
+            var roleText = getTbodyValue(this,3);
+            var role = dicMap.getKey(roleText);
+            alert(role);
+            $("#ROLE").val(role);
+            $("#MPHONE").val(getTbodyValue(this,4));
         } );
 
-        /*$('#table tbody').on('click', '.del', function () {
-         $("#id").val($('td', this.parentNode.parentNode).eq(0).text());
-         } );
-         */
         $("#add").click(function(){
             $("#labelForm :input").val("");
         })
     });
 
+
     function search(){
         var search = $("#labelSearch").val();
         var req = [{"name":"search","value":search}];
-        table = DataTablePack.serverTable($('#table'),'user/getUserList',req,columns,0);
+        table = DataTablePack.serverTable($('#table'),'manage/user/getUserList',req,columns,0);
     }
 
     function exportTemplate(){
-        window.open(fq.contextPath+"/user/export");
+        window.open(fq.contextPath+"/manage/user/export");
     }
 
 </script>

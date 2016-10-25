@@ -353,7 +353,6 @@ function delOptWRef(ids,tableName,pkName,refFun){
  */
 function attachSelectBox(oInputField,value,url){
     jQuery.getJSON(url,{},function(data){
-        var options = new Array();
         for (var i=0;i<data.length;i++){
             option = document.createElement('Option');
             option.text = data[i].iacMap.NAME;
@@ -385,4 +384,70 @@ function attachCheckBox(oCheckField,oHiddenField){
     });
 }
 
+/**
+ * 编辑时获取tbody中列表的字段值
+ * @param mTbody : 列表所在tbody
+ * @param pos ： 字段在列表中的位置
+ * @returns {*|jQuery}
+ */
+function getTbodyValue(mTbody,pos){
+    return $('td', mTbody.parentNode.parentNode).eq(pos).text();
+}
+
+
+function getDicList(type) {
+    var url = fq.contextPath+"/dic";
+    var map = new Map();
+    jQuery.getJSON(url,{type:type},function(data){
+        for (var i=0;i<data.length;i++) {
+            var name = data[i].iacMap.NAME;
+            var nid = data[i].iacMap.NID;
+            alert("put :: "+name +"  "+nid);
+            map.put(nid,name);
+        }
+    });
+    return map;
+}
+
+
+function Map() {
+    this.keys = new Array();
+    this.data = new Array();
+//添加键值对
+    this.put = function (key, value) {
+        if (this.data[key] == null) {//如键不存在则身【键】数组添加键名
+            this.keys.push(key);
+        }
+        this.data[key] = value;//给键赋值
+    };
+//获取键对应的值
+    this.get = function (key) {
+        return this.data[key];
+    };
+//去除键值，(去除键数据中的键名及对应的值)
+    this.remove = function (key) {
+        this.keys.remove(key);
+        this.data[key] = null;
+    };
+//判断键值元素是否为空
+    this.isEmpty = function () {
+        return this.keys.length == 0;
+    };
+//获取键值元素大小
+    this.size = function () {
+        return this.keys.length;
+    };
+    
+    this.getKey = function (value) {
+        alert("value is ::"+this.keys);
+        $.each(this.data, function(key, val) {
+            alert(val);
+           if(val == value){
+               alert("key::"+key);
+               alert(this.keys.get(key));
+               return this.keys[key];
+           }
+        });
+    }
+}
 

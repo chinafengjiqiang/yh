@@ -24,9 +24,10 @@
                     </div>
                     <div class="form-group">
                         <label>任教科目：</label>
-                            <select id="ROLE" name="ROLE" class="select"></select>
+                        <select id="ROLE" name="ROLE" class="select">
+                        </select>
                         <script type="text/javascript">
-                            attachSelectBox(document.getElementById("ROLE"),'1',fq.contextPath+"/dic?type=TEARCH_ROLE");
+                            attachSelectBox(document.getElementById("ROLE"),'',fq.contextPath+"/dic?type=TEARCH_ROLE");
                         </script>
                     </div>
                     <div class="form-group">
