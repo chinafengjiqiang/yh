@@ -150,6 +150,7 @@ fq.serializeObject = function(form) {
     return o;
 };
 
+
 /*
   form submit
   formId:要提交的formId
@@ -165,7 +166,12 @@ function submitForm(formId,url,table,modal) {
             table.ajax.reload( null, false ); // 刷新表格数据，分页信息不会重置
             modal.modal('hide')
         } else {
-            Alert("操作失败！");
+            var msg = result.msg;
+            if(msg != ""){
+                Alert(msg);
+            }else{
+                Alert("操作失败！");
+            }
         }
 
     }, 'json');
@@ -182,7 +188,12 @@ function submitForm(formId,url,table,modal,callback) {
                 callback();
             //}
         } else {
-            Alert("操作失败！");
+            var msg = result.msg;
+            if(msg != ""){
+                Alert(msg);
+            }else{
+                Alert("操作失败！");
+            }
         }
 
     }, 'json');
@@ -202,7 +213,12 @@ function submitFormWRef(formId,url,refFun,modal) {
             refFun;
             modal.modal('hide')
         } else {
-            Alert("操作失败！");
+            var msg = result.msg;
+            if(msg != ""){
+                Alert(msg);
+            }else{
+                Alert("操作失败！");
+            }
         }
 
     }, 'json');
@@ -355,8 +371,8 @@ function attachSelectBox(oInputField,value,url){
     jQuery.getJSON(url,{},function(data){
         for (var i=0;i<data.length;i++){
             option = document.createElement('Option');
-            option.text = data[i].iacMap.NAME;
-            option.value = data[i].iacMap.NID;
+            option.text = data[i].NAME;
+            option.value = data[i].NID;
             try{
                 oInputField.add(option,null);
             }catch(ex){
@@ -395,59 +411,57 @@ function getTbodyValue(mTbody,pos){
 }
 
 
+/**
+ * 根据type获取到此分类所有的字典列表
+ * @param type : dic中的type分类
+ * @returns {*}
+ */
 function getDicList(type) {
-    var url = fq.contextPath+"/dic";
-    var map = new Map();
-    jQuery.getJSON(url,{type:type},function(data){
-        for (var i=0;i<data.length;i++) {
-            var name = data[i].iacMap.NAME;
-            var nid = data[i].iacMap.NID;
-            alert("put :: "+name +"  "+nid);
-            map.put(nid,name);
+    var url = fq.contextPath+"/dic/getDicList";
+    var dicObj;
+    $.ajax({
+        type: "get",
+        url: url,
+        cache: false,
+        async: false,  //设置同步了
+        dataType: "json",
+        data: {type:type},
+        success: function (data) {
+            dicObj = data;
         }
     });
-    return map;
+    return dicObj;
 }
 
+/**
+ * 更加NID的值获取字段名称
+ * @param dic : 获取到的dic列表
+ * @param value ： dic表中的NID值
+ * @returns {*}
+ */
+function getDicText(dic,value){
+    if (typeof(dic) == "undefined"){
+        return value;
+    }else{
+        return dic[value];
+    }
+}
 
-function Map() {
-    this.keys = new Array();
-    this.data = new Array();
-//添加键值对
-    this.put = function (key, value) {
-        if (this.data[key] == null) {//如键不存在则身【键】数组添加键名
-            this.keys.push(key);
+/**
+ * 根据字段名称获取字段NID值
+ * @param dic : 获取到的dic列表
+ * @param name : dic表中的名称
+ * @returns {*}
+ */
+function getDicValue(dic,name){
+    if (typeof(dic) == "undefined"){
+        return name;
+    }else{
+        for(var k in dic) {
+            if(dic[k] == name){
+                return k;
+            }
         }
-        this.data[key] = value;//给键赋值
-    };
-//获取键对应的值
-    this.get = function (key) {
-        return this.data[key];
-    };
-//去除键值，(去除键数据中的键名及对应的值)
-    this.remove = function (key) {
-        this.keys.remove(key);
-        this.data[key] = null;
-    };
-//判断键值元素是否为空
-    this.isEmpty = function () {
-        return this.keys.length == 0;
-    };
-//获取键值元素大小
-    this.size = function () {
-        return this.keys.length;
-    };
-    
-    this.getKey = function (value) {
-        alert("value is ::"+this.keys);
-        $.each(this.data, function(key, val) {
-            alert(val);
-           if(val == value){
-               alert("key::"+key);
-               alert(this.keys.get(key));
-               return this.keys[key];
-           }
-        });
     }
 }
 

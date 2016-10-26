@@ -4,8 +4,8 @@
 <div class="sidebar">
 			<!--- Sidebar navigation -->
 			<ul id="nav">
-				<li><a href="#" class="has_sub" onclick="menu('${contextPath}/manage/user/list')"><i
-						class="icon-table"></i>用户管理</a></li>
+				<li><a href="#" class="has_sub" onclick="menu('${contextPath}/manage/user/tearch')"><i
+						class="icon-table"></i>教师管理</a></li>
 
 
 			</ul>

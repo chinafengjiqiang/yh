@@ -85,4 +85,22 @@ public class ObjUtils {
     public static boolean isNotBlankIACEntryList(List<IACEntry> list){
         return list != null && list.size() > 0;
     }
+
+    public static boolean isNotBlankIACEntry(IACEntry entry){
+        return isNotBlankIACEntry(entry,"ID");
+    }
+
+    public static boolean isNotBlankIACEntry(IACEntry entry,String key){
+        return entry != null && entry.getValueAsObject(key) != null;
+    }
+
+    public static boolean isBlankIACEntry(IACEntry entry){
+        return isBlankIACEntry(entry,"ID");
+    }
+
+    public static boolean isBlankIACEntry(IACEntry entry,String key){
+        return entry == null || entry.getValueAsObject(key) == null;
+    }
+
+
 }

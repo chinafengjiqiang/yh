@@ -8,7 +8,7 @@
                 <div class="col-md-12">
                     <div class="widget">
                         <div class="widget-head">
-                            <div class="pull-left">用户管理</div>
+                            <div class="pull-left">教师管理</div>
                             <div class="clearfix"></div>
                         </div>
                         <div class="widget-content panel-body">
@@ -21,7 +21,7 @@
                                             <button href="#labelModal" data-toggle="modal" type="button" id="add"
                                                     class="btn btn-success">&nbsp;&nbsp;添&nbsp;&nbsp;&nbsp;加&nbsp;&nbsp;</button>
                                             <button type="button" id="exportTmp" class="btn btn-success" onclick="exportTemplate();">下载模板</button>
-                                            <button href="#labelModal" data-toggle="modal" type="button" id="add_batch"
+                                            <button href="#importModal" data-toggle="modal" type="button" id="add_batch"
                                                     class="btn btn-success">批量导入</button>
                                             <button type="button" class="btn btn-danger" onclick="delBatch('TBL_LABEL','ID',table)">批量删除</button>
                                         </div>
@@ -35,7 +35,7 @@
                                 </div>
                                 <thead>
                                 <tr>
-                                    <th>用户ID</th>
+                                    <th>教师ID</th>
                                     <th>用户名</th>
                                     <th>姓名</th>
                                     <th>任教科目</th>
@@ -57,12 +57,13 @@
 </div>
 <!-- 弹出窗口的页面 -->
 <jsp:include page="edit.jsp"></jsp:include>
+<jsp:include page="importTearch.jsp"></jsp:include>
 
 
 <script type="text/javascript">
     var table;
     var formValidate;
-    var dicMap;
+    var dic;
     var columns = [
         {'data':'ID'},
         {'data':'USERNAME'},
@@ -70,7 +71,7 @@
         {
             'data':'ROLE',
             'render':function(data,type,full){
-                var name = dicMap.get(data);
+                var name = getDicText(dic,data);
                 return name;
             }
         },
@@ -85,8 +86,8 @@
         }
     ];
     $(function(){
-        dicMap = getDicList("TEARCH_ROLE");
-        table = DataTablePack.serverTable($('#table'),'manage/user/getUserList',null,columns,0);
+        dic = getDicList("TEARCH_ROLE");
+        table = DataTablePack.serverTable($('#table'),'manage/user/getTearchList',null,columns,0);
     });
 
 
@@ -109,7 +110,20 @@
             ROLE : "请选择任教科目",
         },
         submitHandler:function(form){
-            submitForm('labelForm','manage/user/save',table,$('#labelModal'));
+            submitForm('labelForm','manage/user/saveTearch',table,$('#labelModal'));
+        }
+    });
+
+    $("#importForm").validate({
+        rules : {
+            file : "required",
+        },
+        messages : {
+            file : "请选择要导入的文件",
+        },
+        submitHandler:function(form){
+            //submitForm('importForm','manage/user/importTeacher',table,$('#importModal'));
+            submitFormData('importForm','manage/user/importTeacher',table,$('#importModal'));
         }
     });
 
@@ -119,8 +133,7 @@
             $("#USERNAME").val(getTbodyValue(this,1));
             $("#TRUENAME").val(getTbodyValue(this,2));
             var roleText = getTbodyValue(this,3);
-            var role = dicMap.getKey(roleText);
-            alert(role);
+            var role = getDicValue(dic,roleText);
             $("#ROLE").val(role);
             $("#MPHONE").val(getTbodyValue(this,4));
         } );
@@ -134,11 +147,11 @@
     function search(){
         var search = $("#labelSearch").val();
         var req = [{"name":"search","value":search}];
-        table = DataTablePack.serverTable($('#table'),'manage/user/getUserList',req,columns,0);
+        table = DataTablePack.serverTable($('#table'),'manage/user/getTearchList',req,columns,0);
     }
 
     function exportTemplate(){
-        window.open(fq.contextPath+"/manage/user/export");
+        window.open(fq.contextPath+"/manage/user/exportTearchTmp");
     }
 
 </script>

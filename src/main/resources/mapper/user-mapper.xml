@@ -10,4 +10,8 @@
         </if>
     </select>
 
+    <select id="getUserByUsername" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+          select * from tbl_user WHERE USERNAME = #{USERNAME}
+    </select>
+
 </mapper>

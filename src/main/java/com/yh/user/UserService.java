@@ -6,6 +6,7 @@ import com.yh.dic.IDicService;
 import com.yh.model.DataModel;
 import com.yh.utils.AppConstants;
 import com.yh.utils.DBConstants;
+import com.yh.utils.ObjUtils;
 import com.yh.utils.SpringUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.*;
@@ -91,7 +92,7 @@ public class UserService implements IUserService{
 
     private String[] getRoleTextList(){
         String[] textArr = new String[0];
-        List<IACEntry> roleList = dicService.getDicByType(TEARCH_ROLE);
+        List<IACEntry> roleList = dicService.getDicListByType(TEARCH_ROLE);
         int size = roleList.size();
         if(roleList != null && size > 0){
             textArr = new String[size];
@@ -106,5 +107,26 @@ public class UserService implements IUserService{
 
     public boolean saveUser(HashMap<String, String> user) {
         return iacDB.insertDynamic(DBConstants.TBL_USER_NAME,user);
+    }
+
+    public boolean updateUser(HashMap<String, String> user) {
+       return iacDB.updateDynamic(DBConstants.TBL_USER_NAME,DBConstants.TBL_USER_PK,user);
+    }
+
+    public boolean isUserExist(String username) {
+        IACEntry user = getUserByUsername(username);
+        if(ObjUtils.isNotBlankIACEntry(user))
+            return true;
+        return false;
+    }
+
+    public IACEntry getUserByUsername(String username) {
+        HashMap<String,Object> params = new HashMap<String, Object>();
+        params.put("USERNAME",username);
+        List<IACEntry> userList = iacDB.getIACEntryList("getUserByUsername",params);
+        if(ObjUtils.isNotBlankIACEntryList(userList)){
+            return userList.get(0);
+        }
+        return null;
     }
 }

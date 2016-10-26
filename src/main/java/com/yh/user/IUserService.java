@@ -1,5 +1,6 @@
 package com.yh.user;
 
+import cn.com.iactive.db.IACEntry;
 import com.yh.model.DataModel;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
@@ -17,4 +18,10 @@ public interface IUserService {
     HSSFWorkbook exportTemplate();
 
     boolean saveUser(HashMap<String,String> user);
+
+    boolean updateUser(HashMap<String,String> user);
+
+    boolean isUserExist(String username);
+
+    IACEntry getUserByUsername(String username);
 }
