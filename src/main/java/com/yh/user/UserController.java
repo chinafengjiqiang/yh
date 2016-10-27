@@ -111,7 +111,7 @@ public class UserController {
         RetVO ret = new RetVO();
         try {
             String extName = FileUtils.getFileExt(file.getOriginalFilename());
-            if (!".xls".equals(extName)) {//判断文件格式
+            if (!"xls".equals(extName)) {//判断文件格式
                 ret.setSuccess(false);
                 ret.setMsg(SpringUtil.getMessage("file.format.error"));
                 return ret;

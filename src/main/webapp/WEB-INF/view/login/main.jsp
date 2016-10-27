@@ -54,6 +54,7 @@
 <script src="${staticPath}/js/datatables-pack.js"></script>
 <script src="${staticPath}/js/html5shim.js"></script>
 <script src="${staticPath}/js/jquery.validate.min.js"></script>
+<script src="${staticPath}/js/jquery.form.min.js"></script>
 <script src="${staticPath}/js/dialog.js"></script>
 <script src="${staticPath}/js/custom.js"></script>
 <script type="text/javascript">

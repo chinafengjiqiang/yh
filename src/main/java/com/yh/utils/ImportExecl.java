@@ -5,10 +5,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -386,9 +388,13 @@ public class ImportExecl
 					switch (cell.getCellType())
 					{
 					case HSSFCell.CELL_TYPE_NUMERIC: // 数字
-						cellValue = cell.getNumericCellValue() + "";
+						if (HSSFDateUtil.isCellDateFormatted(cell)) {
+							//  如果是date类型则 ，获取该cell的date值
+							cellValue = HSSFDateUtil.getJavaDate(cell.getNumericCellValue()).toString();
+						} else { // 纯数字
+							cellValue = new DecimalFormat("#.######").format(cell.getNumericCellValue());
+						}
 						break;
-
 					case HSSFCell.CELL_TYPE_STRING: // 字符串
 						cellValue = cell.getStringCellValue();
 						break;

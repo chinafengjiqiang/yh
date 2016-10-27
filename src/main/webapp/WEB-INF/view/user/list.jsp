@@ -23,7 +23,7 @@
                                             <button type="button" id="exportTmp" class="btn btn-success" onclick="exportTemplate();">下载模板</button>
                                             <button href="#importModal" data-toggle="modal" type="button" id="add_batch"
                                                     class="btn btn-success">批量导入</button>
-                                            <button type="button" class="btn btn-danger" onclick="delBatch('TBL_LABEL','ID',table)">批量删除</button>
+                                            <button type="button" class="btn btn-danger" onclick="delBatch('tbl_user','ID',table)">批量删除</button>
                                         </div>
                                         <div class="bread-crumb pull-right">
                                             <form action="" class="">
@@ -80,7 +80,7 @@
             'data':null,
             'render':function(data,type,full){
                 var btn = "<button  href=\"#labelModal\" data-toggle=\"modal\" class=\"btn btn-xs btn-success edit\"><i class=\"icon-pencil\"></i></button></a>&nbsp;&nbsp;&nbsp;&nbsp;" +
-                        "<button id=\"del\" class=\"btn btn-xs btn-danger\" onclick=\"labeldel("+data.ID+")\"><i class=\"icon-remove\"></i> </button>"
+                        "<button id=\"del\" class=\"btn btn-xs btn-danger\" onclick=\"delTearch("+data.ID+")\"><i class=\"icon-remove\"></i> </button>"
                 return btn;
             }
         }
@@ -93,8 +93,8 @@
 
 
 
-    function labeldel(id){
-        del('TBL_LABEL','ID',table,id);
+    function delTearch(id){
+        del('tbl_user','ID',table,id);
     }
 
 
@@ -122,8 +122,7 @@
             file : "请选择要导入的文件",
         },
         submitHandler:function(form){
-            //submitForm('importForm','manage/user/importTeacher',table,$('#importModal'));
-            submitFormData('importForm','manage/user/importTeacher',table,$('#importModal'));
+            ajaxSubmit('importForm','manage/user/importTeacher',table,$('#importModal'));
         }
     });
 

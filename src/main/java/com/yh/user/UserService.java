@@ -87,6 +87,7 @@ public class UserService implements IUserService{
         HSSFDataValidation data_validation = new HSSFDataValidation(regions,constraint);
         // 对sheet页生效
         sheet.addValidationData(data_validation);
+
         return wb;
     }
 

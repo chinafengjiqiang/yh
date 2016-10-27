@@ -9,7 +9,7 @@
             </div>
             <div class="modal-body">
 
-                <form name="importForm" id="importForm" method="post" enctype="multipart/form-data">
+                <form name="importForm" id="importForm" enctype="multipart/form-data">
                     <div class="form-group">
                         <label>选择文件：</label>
                         <input type="file" class="form-control" id="file" name="file">

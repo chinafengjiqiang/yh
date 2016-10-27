@@ -465,3 +465,53 @@ function getDicValue(dic,name){
     }
 }
 
+
+
+var options = {
+    //target: '#output',          //把服务器返回的内容放入id为output的元素中
+    beforeSubmit: showRequest,  //提交前的回调函数
+    success: showResponse,      //提交后的回调函数
+    url: '',                 //默认是form的action， 如果申明，则会覆盖
+    type: 'post',               //默认是form的method（get or post），如果申明，则会覆盖
+    //dataType: 'json',           //html(默认), xml, script, json...接受服务端返回的类型
+    //clearForm: true,          //成功提交后，清除所有表单元素的值
+    //resetForm: true,          //成功提交后，重置所有表单元素的值
+    timeout: 20000               //限制请求的时间，当请求大于5秒后，跳出请求
+}
+
+var mTable;
+var mModel;
+function ajaxSubmit(formId,url,table,modal) {
+    //定义添加或修改的主键
+    url = fq.contextPath + "/"+url;
+
+    mTable = table;
+    mModel = modal;
+
+    options.url = url;
+    $("#"+formId).ajaxSubmit(options);
+    return false;   //阻止表单默认提交
+
+}
+
+
+function showRequest(formData, jqForm, options){
+    //formData: 数组对象，提交表单时，Form插件会以Ajax方式自动提交这些数据，格式如：[{name:user,value:val },{name:pwd,value:pwd}]
+    //jqForm:   jQuery对象，封装了表单的元素
+    //options:  options对象
+    return true;  //只要不返回false，表单都会提交,在这里可以对表单元素进行验证
+};
+
+function showResponse(responseText, statusText){
+    if (responseText.success) {
+        mTable.ajax.reload( null, false ); // 刷新表格数据，分页信息不会重置
+        mModel.modal('hide')
+    } else {
+        var msg = responseText.msg;
+        if(msg != ""){
+            Alert(msg);
+        }else{
+            Alert("操作失败！");
+        }
+    }
+};
