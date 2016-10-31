@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="DeptMapper">
+
+    <select id="getOrgListByAid" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+        select * from tbl_org WHERE AID = #{AID}
+    </select>
+
+    <select id="getOrgList" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+        select * from tbl_org WHERE (1=1)
+        <if test="SEARCH!=null">
+            AND NAME LIKE #{SEARCH}
+        </if>
+    </select>
+
+
+    <select id="getDeptList" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+        select * from tbl_department WHERE (1=1)
+        <if test="PK_ORG != null">
+            AND PK_ORG = #{PK_ORG}
+        </if>
+        <if test="SEARCH!=null">
+            AND NAME LIKE #{SEARCH}
+        </if>
+    </select>
+
+</mapper>

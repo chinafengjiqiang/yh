@@ -4,10 +4,7 @@ import cn.com.iactive.db.IACDB;
 import cn.com.iactive.db.IACEntry;
 import com.yh.dic.IDicService;
 import com.yh.model.DataModel;
-import com.yh.utils.AppConstants;
-import com.yh.utils.DBConstants;
-import com.yh.utils.ObjUtils;
-import com.yh.utils.SpringUtil;
+import com.yh.utils.*;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.hssf.util.CellRangeAddressList;
@@ -36,11 +33,8 @@ public class UserService implements IUserService{
 
 
     public HashMap<String, Object> getUserList(DataModel dataModel) {
-        String search = dataModel.getValueAsString("search");
-        HashMap<String,Object> params = new HashMap<String, Object>();
+        HashMap<String,Object> params = ListSearchUtil.getSearchMap(dataModel);
         params.put("USER_TYPE", AppConstants.USER_TYPE_TEARCH);
-        if(StringUtils.isNotBlank(search))
-            params.put("SEARCH","%"+search+"%");
         return  iacDB.getDataTables("getUserList",dataModel.getDataTablesModel(),params);
     }
 

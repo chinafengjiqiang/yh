@@ -7,4 +7,10 @@ public interface AppConstants {
     int USER_TYPE_ADMIN = 1;//管理员
     int USER_TYPE_TEARCH = 2;//教师
     int USER_TYPE_COMMON = 3;//普通学员
+
+    /**
+     *有效状态定义
+     */
+     int IS_VALID = 1;//有效
+     int NO_VALID = 0;//无效
 }
