@@ -42,7 +42,7 @@ public class DeptService implements IDeptService{
         return iacDB.getIACEntryList("getOrgListByAid",params);
     }
 
-    public List<TreeVO> getDeptTree(int id) {
+    public List<TreeVO> getOrgTree(int id) {
         List<TreeVO> resList = new ArrayList<TreeVO>();
         TreeVO cTree;
         List<IACEntry> orgList = this.getOrgListByAid(id);
@@ -80,6 +80,54 @@ public class DeptService implements IDeptService{
             return iacDB.insertDynamic(DBConstants.TBL_DEPT_NAME,dept);
         }else {
             return iacDB.updateDynamic(DBConstants.TBL_DEPT_NAME,DBConstants.TBL_DEPT_PK,dept);
+        }
+    }
+
+    public List<TreeVO> getDeptTree(int id,int pid) {
+        if(id == 0){
+            return getOrgTree(id);
+        }else{
+            List<TreeVO> resList = new ArrayList<TreeVO>();
+            if(pid == 0){
+                List<IACEntry> deptList = getDeptByOrgId(id);
+                if(ObjUtils.isNotBlankIACEntryList(deptList)){
+                    TreeVO dTree;
+                    for (IACEntry dept : deptList){
+                        dTree = new TreeVO();
+                        dTree.setOpen(true);
+                        dTree.setName(dept.getValueAsString("NAME"));
+                        dTree.setpId(id);
+                        dTree.setId(dept.getValueAsInt("ID"));
+                        resList.add(dTree);
+                    }
+                }
+            }
+            return resList;
+        }
+    }
+
+    public List<IACEntry> getDeptByOrgId(int orgId) {
+        HashMap<String,Object> params = new HashMap<String, Object>();
+        params.put("PK_ORG",orgId);
+        return iacDB.getIACEntryList("getDeptList",params);
+    }
+
+    public HashMap<String, Object> getGroupList(DataModel dataModel) {
+        HashMap<String,Object> params = ListSearchUtil.getSearchMap(dataModel);
+        int orgId = dataModel.getValueAsInt("orgId");
+        int deptId = dataModel.getValueAsInt("deptId");
+        if(orgId > 0)
+            params.put("PK_ORG",orgId);
+        if(deptId >= 0)
+            params.put("PK_DEPT",deptId);
+        return  iacDB.getDataTables("getGroupList",dataModel.getDataTablesModel(),params);
+    }
+
+    public boolean editGroup(HashMap<String, String> group) {
+        if(StringUtils.isBlank(group.get(DBConstants.TBL_GROUP_PK))){
+            return iacDB.insertDynamic(DBConstants.TBL_GROUP_NAME,group);
+        }else {
+            return iacDB.updateDynamic(DBConstants.TBL_GROUP_NAME,DBConstants.TBL_GROUP_PK,group);
         }
     }
 }

@@ -17,9 +17,17 @@ public interface IDeptService {
 
     List<IACEntry> getOrgListByAid(int aid);
 
-    List<TreeVO> getDeptTree(int id);
+    List<TreeVO> getOrgTree(int id);
 
     HashMap<String,Object> getDeptList(DataModel dataModel);
 
     boolean editDept(HashMap<String,String> dept);
+
+    List<TreeVO> getDeptTree(int id,int pid);
+
+    List<IACEntry> getDeptByOrgId(int orgId);
+
+    HashMap<String,Object> getGroupList(DataModel dataModel);
+
+    boolean editGroup(HashMap<String,String> dept);
 }

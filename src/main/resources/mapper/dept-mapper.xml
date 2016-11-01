@@ -26,4 +26,17 @@
         </if>
     </select>
 
+
+    <select id="getGroupList" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+        select * from tbl_group WHERE (1=1)
+        <if test="PK_ORG != null">
+            AND PK_ORG = #{PK_ORG}
+        </if>
+        <if test="PK_DEPT != null">
+            AND PK_DEPT = #{PK_DEPT}
+        </if>
+        <if test="SEARCH!=null">
+            AND NAME LIKE #{SEARCH}
+        </if>
+    </select>
 </mapper>

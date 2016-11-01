@@ -18,5 +18,9 @@ public interface DBConstants {
     String TBL_DEPT_NAME = "tbl_department";
     String TBL_DEPT_PK = "ID";
 
+
+    String TBL_GROUP_NAME = "tbl_group";
+    String TBL_GROUP_PK = "ID";
 }
+
 

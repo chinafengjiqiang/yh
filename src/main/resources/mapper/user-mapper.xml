@@ -5,6 +5,12 @@
 <mapper namespace="UserMapper">
     <select id="getUserList" resultType="java.util.HashMap" parameterType="java.util.HashMap">
         select * from tbl_user WHERE USER_TYPE = #{USER_TYPE}
+        <if test="PK_ORG != null">
+            AND PK_ORG = #{PK_ORG}
+        </if>
+        <if test="PK_DEPT != null">
+            AND PK_DEPT = #{PK_DEPT}
+        </if>
         <if test="SEARCH!=null">
             AND (USERNAME LIKE #{SEARCH} OR TRUENAME LIKE #{SEARCH} OR MPHONE LIKE #{SEARCH})
         </if>

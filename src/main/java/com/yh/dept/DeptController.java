@@ -77,7 +77,7 @@ public class DeptController {
     @ResponseBody
     public List<TreeVO> getOrgTree(HttpServletRequest request){
         int id = ParamUtils.getIntParameter(request,"id",0);
-        return deptService.getDeptTree(id);
+        return deptService.getOrgTree(id);
     }
 
     @RequestMapping(value = "saveDept")
@@ -101,4 +101,41 @@ public class DeptController {
         return "dept/groupMainList";
     }
 
+
+    @RequestMapping(value = "getDeptTree")
+    @ResponseBody
+    public List<TreeVO> getDeptTree(HttpServletRequest request){
+        int id = ParamUtils.getIntParameter(request,"id",0);
+        int pid = ParamUtils.getIntParameter(request,"pId",0);
+        return deptService.getDeptTree(id,pid);
+    }
+
+    @RequestMapping(value = "goGroupList")
+    public String goGroupList(HttpServletRequest request){
+        request.setAttribute("deptId",ParamUtils.getIntParameter(request,"deptId",-1));
+        request.setAttribute("orgId",ParamUtils.getIntParameter(request,"orgId",0));
+        return "dept/groupList";
+    }
+
+    @RequestMapping(value = "getGroupList")
+    @ResponseBody
+    public HashMap<String,Object> getGroupList(DataModel dataModel) {
+        return deptService.getGroupList(dataModel);
+    }
+
+    @RequestMapping(value = "saveGroup")
+    @ResponseBody
+    public RetVO saveGroup(HttpServletRequest request){
+        RetVO ret = new RetVO();
+        boolean res = false;
+        try {
+            HashMap<String,String> group = ParamUtils.getParameters(request);
+            res = deptService.editGroup(group);
+            ret.setSuccess(res);
+        }catch (Exception e){
+            e.printStackTrace();
+            ret.setSuccess(false);
+        }
+        return ret;
+    }
 }

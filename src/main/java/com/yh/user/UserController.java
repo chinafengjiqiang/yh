@@ -46,7 +46,7 @@ public class UserController {
 
     @RequestMapping(value = "tearch")
     public String tearch(){
-        return "user/list";
+        return "user/tearchMainList";
     }
 
     @RequestMapping(value = "getTearchList")
@@ -107,7 +107,7 @@ public class UserController {
 
     @RequestMapping(value = "importTeacher")
     @ResponseBody
-    public RetVO importTeacher(@RequestParam MultipartFile file){
+    public RetVO importTeacher(@RequestParam MultipartFile file,HttpServletRequest request){
         RetVO ret = new RetVO();
         try {
             String extName = FileUtils.getFileExt(file.getOriginalFilename());
@@ -116,7 +116,9 @@ public class UserController {
                 ret.setMsg(SpringUtil.getMessage("file.format.error"));
                 return ret;
             }
-            List<HashMap<String,String>> tList = readTearchXls(file);
+            String orgId = request.getParameter("PK_ORG");
+            String deptId = request.getParameter("PK_DEPT");
+            List<HashMap<String,String>> tList = readTearchXls(file,orgId,deptId);
             for (int i = 0; i < tList.size(); i++) {
                 HashMap<String,String> user = tList.get(i);
                 boolean isExist = userService.isUserExist(user.get("USERNAME"));
@@ -136,7 +138,7 @@ public class UserController {
         return ret;
     }
 
-    private List<HashMap<String,String>> readTearchXls(MultipartFile file)throws Exception{
+    private List<HashMap<String,String>> readTearchXls(MultipartFile file,String orgId,String deptId)throws Exception{
         List<HashMap<String,String>>  tList = new ArrayList<HashMap<String, String>>();
         ImportExecl poi = new ImportExecl();
         List<List<String>> list = poi.read(file.getInputStream(), true);
@@ -161,10 +163,19 @@ public class UserController {
                 user.put("MPHONE",list.get(i).get(3));
                 user.put("USER_TYPE", AppConstants.USER_TYPE_TEARCH+"");
                 user.put("PASSWORD", TEARCH_PASS);
+                user.put("PK_ORG",orgId);
+                user.put("PK_DEPT",deptId);
                 tList.add(user);
             }
         }
         return tList;
+    }
+
+    @RequestMapping(value = "goTearchList")
+    public String goTearchList(HttpServletRequest request){
+        request.setAttribute("deptId",ParamUtils.getIntParameter(request,"deptId",-1));
+        request.setAttribute("orgId",ParamUtils.getIntParameter(request,"orgId",0));
+        return "user/list";
     }
 }
 

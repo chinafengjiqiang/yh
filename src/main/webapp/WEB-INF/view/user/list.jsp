@@ -1,10 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
          pageEncoding="utf-8"%>
-<div class="mainbar">
-    <div class="matter">
-        <div class="container">
-            <!-- Content -->
-            <div class="row">
+
                 <div class="col-md-12">
                     <div class="widget">
                         <div class="widget-head">
@@ -17,13 +13,15 @@
                                    id="table">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <div class="col-md-4">
+                                        <div class="col-md-8">
                                             <button href="#labelModal" data-toggle="modal" type="button" id="add"
                                                     class="btn btn-success">&nbsp;&nbsp;添&nbsp;&nbsp;&nbsp;加&nbsp;&nbsp;</button>
                                             <button type="button" id="exportTmp" class="btn btn-success" onclick="exportTemplate();">下载模板</button>
                                             <button href="#importModal" data-toggle="modal" type="button" id="add_batch"
                                                     class="btn btn-success">批量导入</button>
                                             <button type="button" class="btn btn-danger" onclick="delBatch('tbl_user','ID',table)">批量删除</button>
+                                            <button href="#userGroupModal" data-toggle="modal" type="button" id="user_group"
+                                                    class="btn btn-success">设置分组</button>
                                         </div>
                                         <div class="bread-crumb pull-right">
                                             <form action="" class="">
@@ -51,19 +49,16 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- 弹出窗口的页面 -->
-<jsp:include page="edit.jsp"></jsp:include>
-<jsp:include page="importTearch.jsp"></jsp:include>
+
+
 
 
 <script type="text/javascript">
     var table;
     var formValidate;
     var dic;
+    var deptId = ${deptId};
+    var orgId = ${orgId};
     var columns = [
         {'data':'ID'},
         {'data':'USERNAME'},
@@ -87,7 +82,8 @@
     ];
     $(function(){
         dic = getDicList("TEARCH_ROLE");
-        table = DataTablePack.serverTable($('#table'),'manage/user/getTearchList',null,columns,0);
+        var req = [{"name":"orgId","value":orgId},{"name":"deptId","value":deptId}];
+        table = DataTablePack.serverTable($('#table'),'manage/user/getTearchList',req,columns,0);
     });
 
 
@@ -135,17 +131,38 @@
             var role = getDicValue(dic,roleText);
             $("#ROLE").val(role);
             $("#MPHONE").val(getTbodyValue(this,4));
+            $("#PK_ORG").val(orgId);
+            $("#PK_DEPT").val(deptId);
+
         } );
 
         $("#add").click(function(){
+            if(orgId == 0 && deptId <= 0){
+                Alert("请选择相应的学校或年级！");
+                return false;
+            }
             $("#labelForm :input").val("");
-        })
+            $("#PK_ORG").val(orgId);
+            $("#PK_DEPT").val(deptId);
+        });
+
+
+        $("#add_batch").click(function(){
+            if(orgId == 0 && deptId <= 0){
+                Alert("请选择相应的学校或年级！");
+                return false;
+            }
+            $("#importForm :input").val("");
+            $("#PK_ORG_IMP").val(orgId);
+            $("#PK_DEPT_IMP").val(deptId);
+        });
+
     });
 
 
     function search(){
         var search = $("#labelSearch").val();
-        var req = [{"name":"search","value":search}];
+        var req = [{"name":"search","value":search},{"name":"orgId","value":orgId},{"name":"deptId","value":deptId}];
         table = DataTablePack.serverTable($('#table'),'manage/user/getTearchList',req,columns,0);
     }
 

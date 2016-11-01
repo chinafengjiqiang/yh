@@ -35,6 +35,12 @@ public class UserService implements IUserService{
     public HashMap<String, Object> getUserList(DataModel dataModel) {
         HashMap<String,Object> params = ListSearchUtil.getSearchMap(dataModel);
         params.put("USER_TYPE", AppConstants.USER_TYPE_TEARCH);
+        int orgId = dataModel.getValueAsInt("orgId");
+        int deptId = dataModel.getValueAsInt("deptId");
+        if(orgId > 0)
+            params.put("PK_ORG",orgId);
+        if(deptId >= 0)
+            params.put("PK_DEPT",deptId);
         return  iacDB.getDataTables("getUserList",dataModel.getDataTablesModel(),params);
     }
 

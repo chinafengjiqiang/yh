@@ -13,6 +13,8 @@
                     <div class="form-group" hidden>
                         <label >用户序号：</label>
                         <input type="text" class="form-control" id="ID" name="ID">
+                        <input type="text" class="form-control" id="PK_ORG" name="PK_ORG">
+                        <input type="text" class="form-control" id="PK_DEPT" name="PK_DEPT">
                     </div>
                     <div class="form-group">
                         <label>用户名：</label>

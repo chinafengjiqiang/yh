@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
          pageEncoding="utf-8"%>
 <%@include file="/commons/include.jsp"%>
+<%
+    String cfg = request.getParameter("config");
+%>
 <link rel="stylesheet"
       href="${staticPath}/style/metroStyle.css">
 <div class="sidebar widget tree-div">
@@ -33,13 +36,12 @@
             enable: true,
             url: fq.contextPath+"/manage/dept/getDeptTree",
             dataType: "json",
-            autoParam: ["id"]
+            autoParam: ["id","pId"]
         },
 
         callback: {
             onClick : function(event,treeId, treeNode){
-                var id = treeNode.id;
-                var url = fq.contextPath+"/manage/dept/goDeptList?id="+treeNode.id;
+                var url = getTreeClickUrl(treeNode);
                 loadList(url);
             }
         }
@@ -48,8 +50,33 @@
 
     $(function(){
         $.fn.zTree.init($("#tree"), setting);
-        loadList(fq.contextPath+"/manage/dept/goGroupList");
+        var url = getTreeClickUrl();
+        loadList(url);
     });
 
+
+    function getTreeClickUrl(treeNode){
+        var config= '<%=cfg%>';
+        var url = "";
+
+        var pid;
+        var id;
+        if(treeNode != null){
+            pid = treeNode.pId;
+            id = treeNode.id;
+            //处理学校,点击学校时把学校ID赋值给orgId并把deptId清零.
+            if(pid == 0){
+                pid = id;
+                id = 0;
+            }
+        }
+
+        if(config == "group_dept"){//组管理
+            url = fq.contextPath+"/manage/dept/goGroupList?deptId="+id+"&orgId="+pid;
+        }else if(config == "tearch_dept"){//教师管理
+            url = fq.contextPath+"/manage/user/goTearchList?deptId="+id+"&orgId="+pid;
+        }
+        return  url;
+    }
     //-->
 </script>
