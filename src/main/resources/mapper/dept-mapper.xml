@@ -39,4 +39,12 @@
             AND NAME LIKE #{SEARCH}
         </if>
     </select>
+
+    <select id="getUserGroup" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+        SELECT g.*
+        FROM tbl_group g
+        INNER JOIN tbl_user_group ug
+        ON g.ID = ug.PK_GROUP
+        AND ug.PK_USER = #{PK_USER}
+    </select>
 </mapper>

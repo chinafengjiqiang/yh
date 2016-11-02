@@ -1,5 +1,6 @@
 package com.yh.dept;
 
+import cn.com.iactive.db.IACEntry;
 import com.yh.model.DataModel;
 import com.yh.model.RetVO;
 import com.yh.model.TreeVO;
@@ -137,5 +138,20 @@ public class DeptController {
             ret.setSuccess(false);
         }
         return ret;
+    }
+
+    @RequestMapping(value = "getGroupJson")
+    @ResponseBody
+    public List<IACEntry> getGroupJson(HttpServletRequest request){
+        int orgId = ParamUtils.getIntParameter(request,"orgId",0);
+        int deptId = ParamUtils.getIntParameter(request,"deptId",-1);
+        return deptService.getGroupList(orgId,deptId);
+    }
+
+    @RequestMapping(value = "getUsergroupJson")
+    @ResponseBody
+    public List<IACEntry> getUsergroupJson(HttpServletRequest request){
+        int uid = ParamUtils.getIntParameter(request,"uId",0);
+        return deptService.getUserGroup(uid);
     }
 }

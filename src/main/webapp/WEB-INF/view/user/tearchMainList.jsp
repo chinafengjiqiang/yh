@@ -23,3 +23,5 @@
 <!-- 弹出窗口的页面 -->
 <jsp:include page="edit.jsp"></jsp:include>
 <jsp:include page="importTearch.jsp"></jsp:include>
+<jsp:include page="selectGroup.jsp"></jsp:include>
+<jsp:include page="showUserGroup.jsp"></jsp:include>

@@ -24,4 +24,10 @@ public interface IUserService {
     boolean isUserExist(String username);
 
     IACEntry getUserByUsername(String username);
+
+    boolean saveUserGroup(String gIds,String tIds);
+
+    List<Integer> getGroupUserIds(int gId);
+
+    List<IACEntry> getGroupUser(int gId);
 }

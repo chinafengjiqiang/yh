@@ -130,4 +130,19 @@ public class DeptService implements IDeptService{
             return iacDB.updateDynamic(DBConstants.TBL_GROUP_NAME,DBConstants.TBL_GROUP_PK,group);
         }
     }
+
+    public List<IACEntry> getGroupList(int orgId, int deptId) {
+        HashMap<String,Object> params = new HashMap<String, Object>();
+        if(orgId > 0)
+            params.put("PK_ORG",orgId);
+        if(deptId >= 0)
+            params.put("PK_DEPT",deptId);
+        return iacDB.getIACEntryList("getGroupList",params);
+    }
+
+    public List<IACEntry> getUserGroup(int uid) {
+        HashMap<String,Object> params = new HashMap<String, Object>();
+        params.put("PK_USER",uid);
+        return iacDB.getIACEntryList("getUserGroup",params);
+    }
 }

@@ -1,5 +1,6 @@
 package com.yh.user;
 
+import cn.com.iactive.db.IACEntry;
 import com.yh.model.DataModel;
 import com.yh.model.RetVO;
 import com.yh.utils.*;
@@ -176,6 +177,22 @@ public class UserController {
         request.setAttribute("deptId",ParamUtils.getIntParameter(request,"deptId",-1));
         request.setAttribute("orgId",ParamUtils.getIntParameter(request,"orgId",0));
         return "user/list";
+    }
+
+    @RequestMapping(value = "setTearchGroup")
+    @ResponseBody
+    public RetVO setTearchGroup(HttpServletRequest request){
+        RetVO ret = new RetVO();
+        boolean res = userService.saveUserGroup(ParamUtils.getParameter(request,"gIds",""),
+                ParamUtils.getParameter(request,"tIds",""));
+        ret.setSuccess(res);
+        return ret;
+    }
+
+    @RequestMapping(value = "getGroupUserJson")
+    @ResponseBody
+    public List<IACEntry> getGroupUserJson(HttpServletRequest request){
+        return userService.getGroupUser(ParamUtils.getIntParameter(request,"gId",0));
     }
 }
 

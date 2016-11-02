@@ -30,4 +30,8 @@ public interface IDeptService {
     HashMap<String,Object> getGroupList(DataModel dataModel);
 
     boolean editGroup(HashMap<String,String> dept);
+
+    List<IACEntry> getGroupList(int orgId,int deptId);
+
+    List<IACEntry> getUserGroup(int uid);
 }

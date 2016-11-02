@@ -20,4 +20,7 @@
           select * from tbl_user WHERE USERNAME = #{USERNAME}
     </select>
 
+    <select id="getGroupUserIds" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+        select * from tbl_user_group WHERE PK_GROUP = #{PK_GROUP}
+    </select>
 </mapper>

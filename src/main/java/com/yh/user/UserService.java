@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -129,5 +130,62 @@ public class UserService implements IUserService{
             return userList.get(0);
         }
         return null;
+    }
+
+    public boolean saveUserGroup(String gIds, String tIds) {
+        try {
+            if(StringUtils.isNotBlank(gIds)){
+                String[] gIdArr = gIds.split(",");
+                if(gIdArr != null){
+                    for (String gId : gIdArr){
+                        if(StringUtils.isNotBlank(gId)){
+                            if(StringUtils.isNotBlank(tIds)){
+                                //获取此组中的用户ID
+                                List<Integer> uidList = getGroupUserIds(Integer.parseInt(gId));
+
+                                String[] tIdArr = tIds.split(",");
+                                if(tIdArr != null){
+                                    HashMap<String,Object> ug = null;
+                                    for (String tId : tIdArr){
+                                        if(StringUtils.isNotBlank(tId)){
+                                            //已经存在跳过
+                                            if(uidList.contains(Integer.parseInt(tId)))
+                                                continue;
+                                            ug = new HashMap<String, Object>();
+                                            ug.put("PK_GROUP",gId);
+                                            ug.put("PK_USER",tId);
+                                            iacDB.insertDynamic(DBConstants.TBL_USER_GROUP_NAME,ug);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return true;
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public List<Integer> getGroupUserIds(int gId) {
+        List<Integer> uidList = new ArrayList<Integer>();
+        HashMap<String,Object> params = new HashMap<String, Object>();
+        params.put("PK_GROUP",gId);
+        List<IACEntry> ugList = iacDB.getIACEntryList("getGroupUserIds",params);
+        if(ObjUtils.isNotBlankIACEntryList(ugList)){
+            for(IACEntry ug : ugList){
+                uidList.add(ug.getValueAsInt("PK_USER"));
+            }
+        }
+        return uidList;
+    }
+
+    public List<IACEntry> getGroupUser(int gId) {
+        HashMap<String,Object> params = new HashMap<String, Object>();
+        params.put("PK_GROUP",gId);
+        return iacDB.getIACEntryList("getGroupUserIds",params);
     }
 }

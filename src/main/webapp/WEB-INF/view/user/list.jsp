@@ -20,7 +20,7 @@
                                             <button href="#importModal" data-toggle="modal" type="button" id="add_batch"
                                                     class="btn btn-success">批量导入</button>
                                             <button type="button" class="btn btn-danger" onclick="delBatch('tbl_user','ID',table)">批量删除</button>
-                                            <button href="#userGroupModal" data-toggle="modal" type="button" id="user_group"
+                                            <button href="#selectModal" data-toggle="modal" type="button" id="user_group"
                                                     class="btn btn-success">设置分组</button>
                                         </div>
                                         <div class="bread-crumb pull-right">
@@ -38,6 +38,7 @@
                                     <th>姓名</th>
                                     <th>任教科目</th>
                                     <th>手机号码</th>
+                                    <th>分组</th>
                                     <th>操作</th>
                                 </tr>
                                 </thead>
@@ -70,7 +71,15 @@
                 return name;
             }
         },
+
         {'data':'MPHONE'},
+        {
+            'data':null,
+            'render':function(data,type,full){
+                var btn = "<button href=\"#groups\" data-toggle=\"modal\" class=\"btn btn-xs btn-info edit\"><i class=\"icon-list\" onclick=\"showGroupList("+data.ID+")\"></i></button>";
+                return btn;
+            }
+        },
         {
             'data':null,
             'render':function(data,type,full){
@@ -156,6 +165,20 @@
             $("#PK_ORG_IMP").val(orgId);
             $("#PK_DEPT_IMP").val(deptId);
         });
+        
+        $("#user_group").click(function () {
+            var selData = table.rows('.selected').data();
+            if(selData.length <= 0){
+                Alert("请选择教师！");
+                return false;
+            }
+
+            var tIds = [];
+            $.each(selData,function (i,obj) {
+                tIds.push(obj['ID']);
+            });
+            $("#tIds").val(tIds.join(","));
+        });
 
     });
 
@@ -169,5 +192,7 @@
     function exportTemplate(){
         window.open(fq.contextPath+"/manage/user/exportTearchTmp");
     }
+
+
 
 </script>
