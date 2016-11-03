@@ -23,4 +23,12 @@
     <select id="getGroupUserIds" resultType="java.util.HashMap" parameterType="java.util.HashMap">
         select * from tbl_user_group WHERE PK_GROUP = #{PK_GROUP}
     </select>
+
+    <select id="getGroupUsers" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+        SELECT u.*
+        FROM tbl_user_group ug
+        INNER JOIN tbl_user u
+        ON ug.PK_USER = u.ID
+        AND ug.PK_GROUP = #{PK_GROUP}
+    </select>
 </mapper>

@@ -186,6 +186,13 @@ public class UserService implements IUserService{
     public List<IACEntry> getGroupUser(int gId) {
         HashMap<String,Object> params = new HashMap<String, Object>();
         params.put("PK_GROUP",gId);
-        return iacDB.getIACEntryList("getGroupUserIds",params);
+        return iacDB.getIACEntryList("getGroupUsers",params);
+    }
+
+    public boolean deleteUserGroup(int uid,int gId) {
+        HashMap<String,Object> params = new HashMap<String, Object>();
+        params.put("PK_GROUP",gId);
+        params.put("PK_USER",uid);
+        return iacDB.deleteDynamic(DBConstants.TBL_USER_GROUP_NAME,params);
     }
 }

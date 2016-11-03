@@ -24,6 +24,9 @@ public interface DBConstants {
 
     String TBL_USER_GROUP_NAME = "tbl_user_group";
     String TBL_USER_GROUP_ID = "ID";
+
+    String TBL_MSG_NAME = "tbl_message";
+    String TBL_MSG_PK = "ID";
 }
 
 

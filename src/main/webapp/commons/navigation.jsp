@@ -13,7 +13,8 @@
 				<li><a href="#" class="has_sub" onclick="menu('${contextPath}/manage/user/tearch')"><i
 						class="icon-table"></i>教师管理</a></li>
 
-
+				<li><a href="#" class="has_sub" onclick="menu('${contextPath}/manage/msg')"><i
+						class="icon-table"></i>教学通知</a></li>
 			</ul>
 		</div>
 <script>

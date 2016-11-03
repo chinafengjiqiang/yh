@@ -30,4 +30,6 @@ public interface IUserService {
     List<Integer> getGroupUserIds(int gId);
 
     List<IACEntry> getGroupUser(int gId);
+
+    boolean deleteUserGroup(int uid,int gId);
 }

@@ -29,6 +29,7 @@
                 <tr>
                     <th>分组ID</th>
                     <th>名称</th>
+                    <th>用户</th>
                     <th>操作</th>
                 </tr>
                 </thead>
@@ -49,6 +50,13 @@
     var columns = [
         {'data':'ID'},
         {'data':'NAME'},
+        {
+            'data':null,
+            'render':function(data,type,full){
+                var btn = "<button href=\"#gUsers\" data-toggle=\"modal\" class=\"btn btn-xs btn-info edit\" onclick=\"showUserList("+data.ID+")\"><i class=\"icon-list\"></i></button>";
+                return btn;
+            }
+        },
         {
             'data':null,
             'render':function(data,type,full){

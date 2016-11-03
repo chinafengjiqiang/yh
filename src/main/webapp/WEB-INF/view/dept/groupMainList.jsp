@@ -22,3 +22,4 @@
 </div>
 <!-- 弹出窗口的页面 -->
 <jsp:include page="editGroup.jsp"></jsp:include>
+<jsp:include page="../user/showGroupUser.jsp"></jsp:include>

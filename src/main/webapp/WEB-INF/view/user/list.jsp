@@ -76,7 +76,7 @@
         {
             'data':null,
             'render':function(data,type,full){
-                var btn = "<button href=\"#groups\" data-toggle=\"modal\" class=\"btn btn-xs btn-info edit\"><i class=\"icon-list\" onclick=\"showGroupList("+data.ID+")\"></i></button>";
+                var btn = "<button href=\"#groups\" data-toggle=\"modal\" class=\"btn btn-xs btn-info edit\" onclick=\"showGroupList("+data.ID+")\"><i class=\"icon-list\"></i></button>";
                 return btn;
             }
         },
@@ -192,7 +192,5 @@
     function exportTemplate(){
         window.open(fq.contextPath+"/manage/user/exportTearchTmp");
     }
-
-
 
 </script>

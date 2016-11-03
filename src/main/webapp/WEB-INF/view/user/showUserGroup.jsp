@@ -25,26 +25,29 @@
     </div>
 </div>
 <script type="text/javascript">
+    $.ajaxSettings.async = false;
+    $.ajaxSettings.cache = false;
+
     function showGroupList(uId){
         $.getJSON(fq.contextPath+"/manage/dept/getUsergroupJson",{uId:uId},function (data) {
-                var tableStr = "";
-                for(var i=0 ;i<data.length ; i++){
-                    var gId = data[i].iacMap.ID;
-                    tableStr +=  "<tr><td>"+ data[i].iacMap.NAME +"</td>"+
-                            "<td><button class=\"btn btn-xs btn-danger\" onclick=\"delGroup("+gId+","+uId+")\"><i class=\"icon-remove\"></i> </button></td>";
-                }
-                $("#user_body").html(tableStr);
+            var tableStr = "";
+            for(var i=0 ;i<data.length ; i++){
+                var gId = data[i].iacMap.ID;
+                tableStr +=  "<tr><td>"+ data[i].iacMap.NAME +"</td>"+
+                        "<td><button class=\"btn btn-xs btn-danger\" onclick=\"delGroup("+gId+","+uId+")\"><i class=\"icon-remove\"></i> </button></td></tr>";
+            }
+            $("#user_body").html(tableStr);
         });
     }
 
     function delGroup(gId,uId){
         var deferred = $.Deferred();
         Confirm({
-            msg: '确定要删除数据？',
+            msg: '确定要删除此分组？',
             onOk: function(){
                 $.post(
-                        "file/delFileCategory",
-                        {"gId":gId},
+                        fq.contextPath + "/manage/user/deleteUserGroup",
+                        {"gId":gId,"uId":uId},
                         function(){
                             showGroupList(uId);
                         },"JSON"
@@ -56,5 +59,6 @@
         })
 
     }
+
 
 </script>

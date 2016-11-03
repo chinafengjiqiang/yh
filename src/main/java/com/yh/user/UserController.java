@@ -194,6 +194,16 @@ public class UserController {
     public List<IACEntry> getGroupUserJson(HttpServletRequest request){
         return userService.getGroupUser(ParamUtils.getIntParameter(request,"gId",0));
     }
+
+    @RequestMapping(value = "deleteUserGroup")
+    @ResponseBody
+    public RetVO deleteUserGroup(HttpServletRequest request){
+        RetVO ret = new RetVO();
+        boolean res = userService.deleteUserGroup(ParamUtils.getIntParameter(request,"uId",0),
+                ParamUtils.getIntParameter(request,"gId",0));
+        ret.setSuccess(res);
+        return ret;
+    }
 }
 
 
