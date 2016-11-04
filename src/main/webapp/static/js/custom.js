@@ -184,9 +184,9 @@ function submitForm(formId,url,table,modal,callback) {
         if (result.success) {
             table.ajax.reload( null, false ); // 刷新表格数据，分页信息不会重置
             modal.modal('hide');
-            //if (typeof(reValue) != "undefined") {
+            if(callback != null) {
                 callback();
-            //}
+            }
         } else {
             var msg = result.msg;
             if(msg != ""){

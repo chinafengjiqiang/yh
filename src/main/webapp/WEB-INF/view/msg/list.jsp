@@ -21,6 +21,8 @@
                                             <button href="#editModal" data-toggle="modal" type="button" id="add"
                                                     class="btn btn-success">&nbsp;&nbsp;添&nbsp;&nbsp;&nbsp;加&nbsp;&nbsp;</button>
                                             <button type="button" class="btn btn-danger" onclick="delBatch('tbl_org','ID',table)">批量删除</button>
+                                            <button href="#sendModal" data-toggle="modal" type="button" id="send"
+                                                    class="btn btn-success">发送消息</button>
                                         </div>
                                         <div class="bread-crumb pull-right">
                                             <form action="" class="">
@@ -36,7 +38,6 @@
                                     <th>标题</th>
                                     <th>内容</th>
                                     <th>创建时间</th>
-                                    <th>推送方式</th>
                                     <th>操作</th>
                                 </tr>
                                 </thead>
@@ -54,17 +55,18 @@
 </div>
 <!-- 弹出窗口的页面 -->
 <jsp:include page="edit.jsp"></jsp:include>
+<jsp:include page="send.jsp"></jsp:include>
 
 
 <script type="text/javascript">
     var table;
     var formValidate;
+    var dic;
     var columns = [
         {'data':'ID'},
         {'data':'TITLE'},
         {'data':'CONTENT'},
         {'data':'CREATE_TIME'},
-        {'data':'SEND_TYPE'},
         {
             'data':null,
             'render':function(data,type,full){
@@ -75,6 +77,7 @@
         }
     ];
     $(function(){
+        dic = getDicList("MSG_SEND_TYPE");
         table = DataTablePack.serverTable($('#table'),'manage/msg/getMsgList',null,columns,0);
     });
 
@@ -90,12 +93,10 @@
         rules : {
             TITLE : "required",
             CONTENT : "required",
-            SEND_TYPE:"required"
         },
         messages : {
             TITLE : "请输入消息标题",
             CONTENT : "请输入消息内容",
-            SEND_TYPE:"请选择推送方式",
         },
         submitHandler:function(form){
             submitForm('mForm','manage/msg/saveMsg',table,$('#editModal'));
@@ -107,12 +108,30 @@
     $(document).ready(function(){
         $('#table tbody').on('click', '.edit', function () {
             $("#ID").val(getTbodyValue(this,0));
-            $("#NAME").val(getTbodyValue(this,1));
+            $("#TITLE").val(getTbodyValue(this,1));
+            $("#CONTENT").val(getTbodyValue(this,2));
+            var msgTypeText = getTbodyValue(this,4);
+            var msgType = getDicValue(dic,msgTypeText);
+            $("#SEND_TYPE").val(msgType);
         } );
 
         $("#add").click(function(){
             $("#mForm :input").val("");
         })
+
+        $("#send").click(function () {
+            var selData = table.rows('.selected').data();
+            if(selData.length <= 0){
+                Alert("请选择要发送的消息！");
+                return false;
+            }
+
+            var mIds = [];
+            $.each(selData,function (i,obj) {
+                mIds.push(obj['ID']);
+            });
+            $("#mIds").val(mIds.join(","));
+        });
     });
 
 

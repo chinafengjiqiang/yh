@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
-         pageEncoding="utf-8"%>
+               pageEncoding="utf-8"%>
 <div aria-hidden="true" aria-labelledby="editModal" role="dialog" tabindex="-1" id="editModal" class="modal fade in">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -11,9 +11,9 @@
 
                 <form role="form" name="mForm" id="mForm">
                     <div class="form-group" hidden>
-                        <label >序号：</label>
-                        <input type="text" class="form-control" id="ID" name="ID">
-                    </div>
+                    <label >序号：</label>
+                    <input type="text" class="form-control" id="ID" name="ID">
+                </div>
                     <div class="form-group">
                         <label>标题：</label>
                         <input type="text" class="form-control" id="TITLE" name="TITLE" placeholder="请输入标题">
@@ -22,14 +22,7 @@
                         <label>内容：</label>
                         <input type="text" class="form-control" id="CONTENT" name="CONTENT" placeholder="请输入内容">
                     </div>
-                    <div class="form-group">
-                        <label>推送方式：</label>
-                        <select id="SEND_TYPE" name="SEND_TYPE" class="select">
-                        </select>
-                        <script type="text/javascript">
-                            attachSelectBox(document.getElementById("SEND_TYPE"),'',fq.contextPath+"/dic?type=MSG_SEND_TYPE");
-                        </script>
-                    </div>
+
                     <button type="submit" class="btn btn-success">提交</button>
                     <button data-dismiss="modal" class="btn btn-cancel" type="button">取消</button>
                 </form>
