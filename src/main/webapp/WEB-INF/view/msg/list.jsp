@@ -131,6 +131,9 @@
                 mIds.push(obj['ID']);
             });
             $("#mIds").val(mIds.join(","));
+
+            var recObjList = document.getElementById("REC_OBJ");
+            recObjList.length = 0;
         });
     });
 

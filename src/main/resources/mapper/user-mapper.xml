@@ -31,4 +31,13 @@
         ON ug.PK_USER = u.ID
         AND ug.PK_GROUP = #{PK_GROUP}
     </select>
+
+    <select id="getDeptUser" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+        SELECT *
+        FROM tbl_user
+        WHERE PK_ORG = #{PK_ORG}
+        AND PK_DEPT = #{PK_DEPT}
+        AND USER_TYPE = #{USER_TYPE}
+    </select>
+
 </mapper>

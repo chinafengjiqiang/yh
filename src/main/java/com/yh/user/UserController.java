@@ -204,6 +204,13 @@ public class UserController {
         ret.setSuccess(res);
         return ret;
     }
+
+    @RequestMapping(value = "getDeptUserJson")
+    @ResponseBody
+    public List<IACEntry> getDeptUserJson(HttpServletRequest request){
+        return userService.getDeptUser(ParamUtils.getIntParameter(request,"orgId",0),
+                ParamUtils.getIntParameter(request,"deptId",0),ParamUtils.getIntParameter(request,"type",0));
+    }
 }
 
 

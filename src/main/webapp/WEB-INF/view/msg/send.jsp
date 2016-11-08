@@ -26,7 +26,8 @@
                         <label>对象：</label>
                         <select id="REC_OBJ" name="REC_OBJ" class="select" style="width: 250px;height: 200px;" size="5">
                         </select>
-                        <button class="btn btn-success" style="margin-top: -110px;width: 120px;left: 380px;">选择</button>
+                        <button href="#" data-toggle="modal" type="button" id="select" onclick="selectSendObj()"
+                                class="btn btn-success" style="margin-top: -110px;width: 120px;left: 380px;">选择</button>
                     </div>
                     <div class="form-group">
                         <label>发送方式：</label>
@@ -43,3 +44,15 @@
         </div>
     </div>
 </div>
+<!-- 弹出窗口的页面 -->
+<jsp:include page="../user/selectUser.jsp"></jsp:include>
+<script>
+    var REC_TYPE_MODAL = ['selectUserModal','selectDeptModal','selectGroupModal',
+    'selectOrgModal','selectRoleModal'];
+    function selectSendObj() {
+        var recType = $("#REC_TYPE").val();
+        var modalVal = REC_TYPE_MODAL[recType-1];
+        $('#'+modalVal).modal('toggle');
+    }
+
+</script>

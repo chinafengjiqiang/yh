@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
          pageEncoding="utf-8"%>
 <%@include file="/commons/include.jsp"%>
+<%
+    String cfg = request.getParameter("config");
+%>
 <link rel="stylesheet"
       href="${staticPath}/style/metroStyle.css">
 <div class="sidebar tree-div" style="margin-top:0;width:220px;height:450px;border: 1px #A9A9A9 solid;background-color: #FFF;">
@@ -14,6 +17,7 @@
 </div>
 <script src="${staticPath}/js/jquery.ztree.core.min.js"></script>
 <script type="text/javascript">
+    var cfg = '<%=cfg%>';
     function loadList(url) {
         $("#mainbar-list").load(url);
     }
@@ -52,10 +56,18 @@
                 id = 0;
             }
         }
-        var url = fq.contextPath+"/manage/dept/getGroupJson";
-        $.getJSON(url,{deptId:id,orgId:pid},function (data) {
-            setSource(data);
-        });
+        if(cfg == "user_tree"){
+            var url = fq.contextPath+"/manage/user/getDeptUserJson";
+            $.getJSON(url,{deptId:id,orgId:pid,type:2},function (data) {
+                setSource(data);
+            });
+        }else{
+            var url = fq.contextPath+"/manage/dept/getGroupJson";
+            $.getJSON(url,{deptId:id,orgId:pid},function (data) {
+                setSource(data);
+            });
+        }
+
     }
 
     $(function(){

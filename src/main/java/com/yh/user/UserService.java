@@ -195,4 +195,12 @@ public class UserService implements IUserService{
         params.put("PK_USER",uid);
         return iacDB.deleteDynamic(DBConstants.TBL_USER_GROUP_NAME,params);
     }
+
+    public List<IACEntry> getDeptUser(int orgId, int deptId,int userType) {
+        HashMap<String,Object> params = new HashMap<String, Object>();
+        params.put("PK_ORG",orgId);
+        params.put("PK_DEPT",deptId);
+        params.put("USER_TYPE",userType);
+        return iacDB.getIACEntryList("getDeptUser",params);
+    }
 }
