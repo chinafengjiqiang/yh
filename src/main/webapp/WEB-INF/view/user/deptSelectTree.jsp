@@ -2,7 +2,7 @@
          pageEncoding="utf-8"%>
 <%@include file="/commons/include.jsp"%>
 <%
-    String cfg = request.getParameter("config");
+    String dept_tree_config = request.getParameter("dept_tree_config");
 %>
 <link rel="stylesheet"
       href="${staticPath}/style/metroStyle.css">
@@ -10,14 +10,14 @@
     <TABLE border=0 height=440px align=left>
         <TR>
             <TD align=left valign=top>
-                <ul id="tree_select" class="ztree" style="overflow:auto;"></ul>
+                <ul id="tree_select<%=dept_tree_config%>" class="ztree" style="overflow:auto;"></ul>
             </TD>
         </TR>
     </TABLE>
 </div>
 <script src="${staticPath}/js/jquery.ztree.core.min.js"></script>
 <script type="text/javascript">
-    var cfg = '<%=cfg%>';
+    var cfg_tree = '<%=dept_tree_config%>';
     function loadList(url) {
         $("#mainbar-list").load(url);
     }
@@ -56,12 +56,27 @@
                 id = 0;
             }
         }
-        if(cfg == "user_tree"){
+        if(cfg_tree == "user_tree"){
             var url = fq.contextPath+"/manage/user/getDeptUserJson";
             $.getJSON(url,{deptId:id,orgId:pid,type:2},function (data) {
-                setSource(data);
+                setSelectUserSource(data);
             });
-        }else{
+        }else if(cfg_tree == 'group_tree'){
+            var url = fq.contextPath+"/manage/dept/getGroupJson";
+            $.getJSON(url,{deptId:id,orgId:pid},function (data) {
+                setSelectGroupSource(data);
+            });
+        }else if(cfg_tree == 'role_tree'){
+            clearAllSelect();
+            if(id <= 0){
+                return;
+            }
+            var url = fq.contextPath+"/dic";
+            $.getJSON(url,{type:'TEARCH_ROLE'},function (data) {
+                setSelectRoleSource(id,treeNode.name,data);
+            });
+        }
+        else{
             var url = fq.contextPath+"/manage/dept/getGroupJson";
             $.getJSON(url,{deptId:id,orgId:pid},function (data) {
                 setSource(data);
@@ -71,7 +86,7 @@
     }
 
     $(function(){
-        $.fn.zTree.init($("#tree_select"), setting_select);
+        $.fn.zTree.init($("#tree_select"+cfg_tree), setting_select);
     });
 
 

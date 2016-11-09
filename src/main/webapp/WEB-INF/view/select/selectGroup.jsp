@@ -1,9 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
          pageEncoding="utf-8"%>
 <%@include file="/commons/include.jsp"%>
-<div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="selectModal" class="modal fade in">
-    <div class="modal-dialog" style="width: 800px;">
-        <div class="modal-content">
 
             <div class="modal-header">
                 <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
@@ -15,11 +12,13 @@
 
                     <div class="col-md-4" style="height: 500px;">
                         选择学校
-                        <jsp:include page="deptSelectTree.jsp"></jsp:include>
+                        <jsp:include page="../user/deptSelectTree.jsp">
+                            <jsp:param name="dept_tree_config" value="group_tree"></jsp:param>
+                        </jsp:include>
                     </div>
                     <div class="col-md-4" style="height: 500px;">
                         分组(双击可选中)
-                        <select size="20" style="width: 100%;height: 90%;font-size: 14px;overflow: auto;" id="sourceList" ondblclick="addSelect();">
+                        <select size="20" style="width: 100%;height: 90%;font-size: 14px;overflow: auto;" id="sourceList_group" ondblclick="addSelect();">
                         </select>
 
                     </div>
@@ -33,7 +32,7 @@
                     </div>
                     <div class="col-md-3" style="height: 500px;">
                         已选择分组(双击删除)
-                        <select size="20" style="width: 100%;height: 90%;font-size: 14px;overflow: auto;" id="destList" ondblclick="delDestList();">
+                        <select size="20" style="width: 100%;height: 90%;font-size: 14px;overflow: auto;" id="destList_group" ondblclick="delDestList();">
                         </select>
                         <input type="hidden" id="tIds">
                     </div>
@@ -44,17 +43,12 @@
                     <button data-dismiss="modal" class="btn btn-cancel" type="button">取消</button>
                 </div>
             </div>
-
-        </div>
-    </div>
-</div>
-
 <script type="text/javascript" src="${staticPath}/js/selectobject.js"></script>
 <script type="text/javascript">
 
-    function setSource(result) {
+    function setSelectGroupSource(result) {
         if(result != null){
-            var sourceList = document.getElementById("sourceList");
+            var sourceList = document.getElementById("sourceList_group");
             sourceList.length = 0;
             for(var i=0;i < result.length;i++){
                 var id = result[i].iacMap.ID;
@@ -65,10 +59,10 @@
     }
 
     function addSelect(){
-        var sourceList = document.getElementById("sourceList");
+        var sourceList = document.getElementById("sourceList_group");
         if (sourceList != null && sourceList.selectedIndex >= 0) {
             var op = sourceList.options[sourceList.selectedIndex];
-            var destList = document.getElementById("destList");
+            var destList = document.getElementById("destList_group");
             addElement(destList, op.value, op.text);
         }else
         {
@@ -78,35 +72,28 @@
 
 
     function delDestList(){
-        var destList = document.getElementById("destList");
+        var destList = document.getElementById("destList_group");
         if(destList.selectedIndex>=0){
             destList.remove(destList.selectedIndex);
         }
     }
 
     function submitSelect() {
-         var destList = document.getElementById("destList");
-         if(destList.length < 1){
-         Alert("请选择分组！");
-         return false;
-         }
+        var destList = document.getElementById("destList_group");
+        if(destList.length < 1){
+            Alert("请选择分组！");
+            return false;
+        }
 
-             var ids = [];
-             for(var i=0;i<destList.length;i++) {
-                 var op=destList.options[i];
-                 ids.push(op.value);
-             }
+        var recObjList = document.getElementById("REC_OBJ");
+        for(var i=0;i<destList.length;i++) {
+            var op=destList.options[i];
+            addElement(recObjList, op.value, op.text);
+        }
 
-             var tIds = $("#tIds").val();
-             $.post(fq.contextPath+"/manage/user/setTearchGroup", {"gIds":ids.join(","),"tIds":tIds}, function (result) {
-                 if(result.success){
-                     $("#selectModal").modal('hide');
-                     Alert("设置成功！");
-                 }else{
-                     Alert("设置失败！");
-                 }
-             }, 'json');
+        hideSelectModal();
+    }
 
-
-     }
+    function setSource() {
+    }
 </script>

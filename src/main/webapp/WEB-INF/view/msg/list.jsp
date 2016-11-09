@@ -103,7 +103,17 @@
         }
     });
 
-
+    $("#sendForm").validate({
+        rules : {
+            REC_OBJ : "required",
+        },
+        messages : {
+            REC_OBJ : "请选择对象",
+        },
+        submitHandler:function(form){
+            submitForm('sendForm','manage/msg/saveSend',table,$('#sendModal'));
+        }
+    });
 
     $(document).ready(function(){
         $('#table tbody').on('click', '.edit', function () {

@@ -154,4 +154,11 @@ public class DeptController {
         int uid = ParamUtils.getIntParameter(request,"uId",0);
         return deptService.getUserGroup(uid);
     }
+
+    @RequestMapping(value = "getDeptJson")
+    @ResponseBody
+    public List<IACEntry> getDeptJson(HttpServletRequest request){
+        return deptService.getDeptByOrgId(ParamUtils.getIntParameter(request,"orgId",0));
+    }
+
 }

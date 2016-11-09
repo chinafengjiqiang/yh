@@ -48,4 +48,22 @@ public class MsgController {
         }
         return ret;
     }
+
+    @RequestMapping(value = "saveSend")
+    @ResponseBody
+    public RetVO saveSend(HttpServletRequest request){
+        RetVO ret = new RetVO();
+        boolean res = false;
+        try {
+            HashMap<String,String> sendInfo = ParamUtils.getParameters(request);
+
+            ret.setSuccess(res);
+        }catch (Exception e){
+            e.printStackTrace();
+            ret.setSuccess(false);
+        }
+        return ret;
+    }
+
+
 }
