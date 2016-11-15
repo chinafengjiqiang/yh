@@ -145,4 +145,16 @@ public class DeptService implements IDeptService{
         params.put("PK_USER",uid);
         return iacDB.getIACEntryList("getUserGroup",params);
     }
+
+    public IACEntry getDeptById(int id) {
+        return iacDB.getSelectOneIACEntry(DBConstants.TBL_DEPT_NAME,id);
+    }
+
+    public IACEntry getOrgById(int id) {
+        return iacDB.getSelectOneIACEntry(DBConstants.TBL_ORG_NAME,id);
+    }
+
+    public IACEntry getGroupById(int id) {
+        return iacDB.getSelectOneIACEntry(DBConstants.TBL_GROUP_NAME,id);
+    }
 }

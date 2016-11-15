@@ -38,6 +38,7 @@
                                     <th>标题</th>
                                     <th>内容</th>
                                     <th>创建时间</th>
+                                    <th>发送记录</th>
                                     <th>操作</th>
                                 </tr>
                                 </thead>
@@ -56,6 +57,7 @@
 <!-- 弹出窗口的页面 -->
 <jsp:include page="edit.jsp"></jsp:include>
 <jsp:include page="send.jsp"></jsp:include>
+<jsp:include page="showMsgRule.jsp"></jsp:include>
 
 
 <script type="text/javascript">
@@ -67,6 +69,13 @@
         {'data':'TITLE'},
         {'data':'CONTENT'},
         {'data':'CREATE_TIME'},
+        {
+            'data':null,
+            'render':function(data,type,full){
+                var btn = "<button href=\"#msgRules\" data-toggle=\"modal\" class=\"btn btn-xs btn-info edit\" onclick=\"showRuleList("+data.ID+")\"><i class=\"icon-list\"></i></button>";
+                return btn;
+            }
+        },
         {
             'data':null,
             'render':function(data,type,full){
@@ -153,7 +162,5 @@
         var req = [{"name":"search","value":search}];
         table = DataTablePack.serverTable($('#table'),'manage/msg/getMsgList',req,columns,0);
     }
-
-
 
 </script>

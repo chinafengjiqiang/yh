@@ -203,4 +203,8 @@ public class UserService implements IUserService{
         params.put("USER_TYPE",userType);
         return iacDB.getIACEntryList("getDeptUser",params);
     }
+
+    public IACEntry getUserById(int id) {
+        return iacDB.getSelectOneIACEntry(DBConstants.TBL_USER_NAME,id);
+    }
 }

@@ -103,4 +103,11 @@ public class ObjUtils {
     }
 
 
+    public static HashMap<String,Object> getObjMap(){
+        return new HashMap<String, Object>();
+    }
+
+    public static HashMap<String,String> getStringMap(){
+        return new HashMap<String, String>();
+    }
 }

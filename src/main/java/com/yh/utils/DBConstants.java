@@ -27,6 +27,9 @@ public interface DBConstants {
 
     String TBL_MSG_NAME = "tbl_message";
     String TBL_MSG_PK = "ID";
+
+    String TBL_MSG_RULE_NAME = "tbl_msg_rule";
+    String TBL_MSG_RULE_PK = "ID";
 }
 
 

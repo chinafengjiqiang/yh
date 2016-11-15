@@ -34,4 +34,10 @@ public interface IDeptService {
     List<IACEntry> getGroupList(int orgId,int deptId);
 
     List<IACEntry> getUserGroup(int uid);
+
+    IACEntry getDeptById(int id);
+
+    IACEntry getOrgById(int id);
+
+    IACEntry getGroupById(int id);
 }
