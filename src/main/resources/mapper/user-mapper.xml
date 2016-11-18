@@ -40,4 +40,9 @@
         AND USER_TYPE = #{USER_TYPE}
     </select>
 
+    <select id="getUserPushBind" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+        SELECT *
+        FROM tbl_push_bind
+        WHERE USER_ID = #{USER_ID}
+    </select>
 </mapper>

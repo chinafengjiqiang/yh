@@ -207,4 +207,17 @@ public class UserService implements IUserService{
     public IACEntry getUserById(int id) {
         return iacDB.getSelectOneIACEntry(DBConstants.TBL_USER_NAME,id);
     }
+
+    public boolean savePushBind(HashMap<String, Object> push) {
+        return iacDB.insertDynamic(DBConstants.TBL_PUSH_BIND_NAME,push);
+    }
+
+    public IACEntry getUserPushBind(int userId) {
+        HashMap<String,Object> params = ObjUtils.getObjMap();
+        params.put("USER_ID",userId);
+        List<IACEntry> pList = iacDB.getIACEntryList("getUserPushBind",params);
+        if(ObjUtils.isNotBlankIACEntryList(pList))
+            return pList.get(0);
+        return null;
+    }
 }

@@ -11,10 +11,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by FQ.CHINA on 2016/11/3.
@@ -50,11 +47,15 @@ public class MsgService implements IMsgService{
 
     public boolean processSend(HashMap<String, String> msg) {
         try {
+
+            //存放保存成功的发送权限
+            List<HashMap<String,Object>> ruleList = new ArrayList<HashMap<String, Object>>();
+
             //保存通知发送记录
-            saveMsgSendInfo(msg);
+            saveMsgSendInfo(msg,ruleList);
 
             //进行发送
-            sendPush(msg);
+            sendPush(ruleList);
 
             return true;
         }catch (Exception e){
@@ -63,7 +64,7 @@ public class MsgService implements IMsgService{
         }
     }
 
-    private void saveMsgSendInfo(HashMap<String,String> msg)throws Exception{
+    private void saveMsgSendInfo(HashMap<String,String> msg,List<HashMap<String,Object>> ruleList)throws Exception{
         String msgIds = msg.get("mIds");
         if(StringUtils.isNotBlank(msgIds)){
             String[] msgIdArr = msgIds.split(",");
@@ -93,7 +94,10 @@ public class MsgService implements IMsgService{
                                         rule.put("OBJ_ID",NumUtils.String2Int(msgId));
                                         rule.put("OBJ_RANGE",NumUtils.String2Int(sendType));
                                         rule.put("CREATE_TIME",new Date());
-                                        iacDB.insertDynamic(DBConstants.TBL_MSG_RULE_NAME,rule);
+                                        boolean ret = iacDB.insertDynamic(DBConstants.TBL_MSG_RULE_NAME,rule);
+                                        if(ret){
+                                            ruleList.add(rule);
+                                        }
                                     }
                                 }
                             }
@@ -104,8 +108,26 @@ public class MsgService implements IMsgService{
         }
     }
 
-    private void sendPush(HashMap<String,String> msg)throws Exception{
+    private void sendPush(List<HashMap<String,Object>> ruleList)throws Exception{
+        Map<Integer,IACEntry> msgMap = new HashMap<Integer,IACEntry>();
+        for (HashMap<String, Object> rule : ruleList) {
+            int msgId = (Integer)rule.get("OBJ_ID");
+            int msgRange = (Integer)rule.get("OBJ_RANGE");
 
+            //加载消息内容
+            IACEntry msg = msgMap.get(msgId);
+            if (ObjUtils.isBlankIACEntry(msg)) {
+                msg = getMsgById(msgId);
+                if (ObjUtils.isNotBlankIACEntry(msg)) {
+                    msg.getIacMap().put("MSG_RANGE",msgRange);
+                    msgMap.put(msgId,msg);
+                }
+            }
+            //处理
+            if (ObjUtils.isNotBlankIACEntry(msg)) {
+
+            }
+        }
     }
 
     public List<IACEntry> getMsgRuleList(int msgId) {
@@ -168,5 +190,34 @@ public class MsgService implements IMsgService{
         }
         rule.getIacMap().put("SRC_NAME",srcName);
         return rule;
+    }
+
+    public IACEntry getMsgById(int msgId) {
+        return iacDB.getSelectOneIACEntry(DBConstants.TBL_MSG_NAME,msgId);
+    }
+
+    private void getRuleUser(HashMap<String,Object> rule){
+        int srcType = (Integer)rule.get("SRC_TYPE");
+        int src = (Integer)rule.get("SRC");
+        int srcRange = (Integer)rule.get("SRC_RANGE");
+        switch (srcType){
+            case AppConstants.MSG_SRC_TYPE_USER:
+                IACEntry user = userService.getUserById(src);
+
+                break;
+            case AppConstants.MSG_SRC_TYPE_ROLE:
+
+                break;
+            case AppConstants.MSG_SRC_TYPE_DEPT:
+
+                break;
+            case AppConstants.MSG_SRC_TYPE_GROUP:
+
+                break;
+            case AppConstants.MSG_SRC_TYPE_ORG:
+
+                break;
+        }
+
     }
 }

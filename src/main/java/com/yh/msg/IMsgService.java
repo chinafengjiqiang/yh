@@ -17,4 +17,6 @@ public interface IMsgService {
     boolean processSend(HashMap<String,String> msg);
 
     List<IACEntry> getMsgRuleList(int msgId);
+
+    IACEntry getMsgById(int msgId);
 }

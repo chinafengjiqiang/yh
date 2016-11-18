@@ -30,6 +30,9 @@ public interface DBConstants {
 
     String TBL_MSG_RULE_NAME = "tbl_msg_rule";
     String TBL_MSG_RULE_PK = "ID";
+
+    String TBL_PUSH_BIND_NAME = "tbl_push_bind";
+    String TBL_PUSH_BIND_PK = "ID";
 }
 
 

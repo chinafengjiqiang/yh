@@ -12,9 +12,13 @@ public class ParamsCheck {
     /**
      * 定义要进行验证的参数
      */
+    //登录
     private static final String[] LOGIN = {"username","userpass"};
 
-    public static boolean checLogin(HashMap<String, String> params){
+    //推送绑定
+    private static final String[] PUSH_BIND = {"userId","clientId"};
+
+    public static boolean checkLogin(HashMap<String, String> params){
         if (params == null || params.size() == 0)
             return false;
         for (String key : LOGIN) {
@@ -25,6 +29,17 @@ public class ParamsCheck {
         String userType = params.get("userType");
         if(StringUtils.isBlank(userType)){
             params.put("userType", AppConstants.USER_TYPE_TEARCH+"");
+        }
+        return true;
+    }
+
+    public static boolean checkPushBind(HashMap<String, String> params) {
+        if (params == null || params.size() == 0)
+            return false;
+        for (String key : PUSH_BIND) {
+            String value = params.get(key);
+            if (StringUtils.isBlank(value))
+                return false;
         }
         return true;
     }
