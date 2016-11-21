@@ -51,6 +51,7 @@ public class ApiService implements IApi{
             String mphone = user.getValueAsString("MPHONE");
             retMap.put("userId",userId);
             retMap.put("username",username);
+            retMap.put("userpass",password);
             retMap.put("truename",truename);
             retMap.put("userType",userType);
             retMap.put("userOrg",org);

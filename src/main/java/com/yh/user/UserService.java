@@ -204,6 +204,13 @@ public class UserService implements IUserService{
         return iacDB.getIACEntryList("getDeptUser",params);
     }
 
+    public List<IACEntry> getDeptUser(int deptId, int userType) {
+        HashMap<String,Object> params = new HashMap<String, Object>();
+        params.put("PK_DEPT",deptId);
+        params.put("USER_TYPE",userType);
+        return iacDB.getIACEntryList("getDeptUser",params);
+    }
+
     public IACEntry getUserById(int id) {
         return iacDB.getSelectOneIACEntry(DBConstants.TBL_USER_NAME,id);
     }
@@ -219,5 +226,19 @@ public class UserService implements IUserService{
         if(ObjUtils.isNotBlankIACEntryList(pList))
             return pList.get(0);
         return null;
+    }
+
+    public List<IACEntry> getOrgUser(int orgId, int userType) {
+        HashMap<String,Object> params = new HashMap<String, Object>();
+        params.put("PK_ORG",orgId);
+        params.put("USER_TYPE",userType);
+        return iacDB.getIACEntryList("getDeptUser",params);
+    }
+
+    public List<IACEntry> getDeptRoleUser(int deptId, int role) {
+        HashMap<String,Object> params = new HashMap<String, Object>();
+        params.put("PK_DEPT",deptId);
+        params.put("ROLE",role);
+        return iacDB.getIACEntryList("getDeptRoleUser",params);
     }
 }

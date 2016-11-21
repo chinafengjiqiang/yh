@@ -35,9 +35,15 @@ public interface IUserService {
 
     List<IACEntry> getDeptUser(int orgId,int deptId,int userType);
 
+    List<IACEntry> getDeptUser(int deptId,int userType);
+
     IACEntry getUserById(int id);
 
     boolean savePushBind(HashMap<String,Object> push);
 
     IACEntry getUserPushBind(int userId);
+
+    List<IACEntry> getOrgUser(int orgId,int userType);
+
+    List<IACEntry> getDeptRoleUser(int deptId,int role);
 }

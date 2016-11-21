@@ -5,6 +5,9 @@ import cn.com.iactive.db.IACEntry;
 import com.yh.dept.IDeptService;
 import com.yh.dic.IDicService;
 import com.yh.model.DataModel;
+import com.yh.push.Global;
+import com.yh.push.GtPushService;
+import com.yh.push.IPush;
 import com.yh.user.IUserService;
 import com.yh.utils.*;
 import org.apache.commons.lang.StringUtils;
@@ -125,7 +128,18 @@ public class MsgService implements IMsgService{
             }
             //处理
             if (ObjUtils.isNotBlankIACEntry(msg)) {
-
+                List<Integer> userIdList = new ArrayList<Integer>();
+                this.getRuleUser(rule,userIdList);
+                if(userIdList.size() > 0){
+                    String title = msg.getValueAsString("TITLE");
+                    String content = msg.getValueAsString("CONTENT");
+                    String transmissionContent = title+"$@@$"+content;
+                    List<String> clientIdList = getPushClientByUsers(userIdList);
+                    if (clientIdList != null && clientIdList.size() > 0) {
+                        IPush push = new GtPushService();
+                        boolean ret = push.pushToList(title,content,transmissionContent,clientIdList, Global.TMPLT_NOTIFICATION);
+                    }
+                }
             }
         }
     }
@@ -196,28 +210,59 @@ public class MsgService implements IMsgService{
         return iacDB.getSelectOneIACEntry(DBConstants.TBL_MSG_NAME,msgId);
     }
 
-    private void getRuleUser(HashMap<String,Object> rule){
+    private void getRuleUser(HashMap<String,Object> rule, List<Integer> userIdList){
         int srcType = (Integer)rule.get("SRC_TYPE");
         int src = (Integer)rule.get("SRC");
         int srcRange = (Integer)rule.get("SRC_RANGE");
         switch (srcType){
             case AppConstants.MSG_SRC_TYPE_USER:
                 IACEntry user = userService.getUserById(src);
-
+                addUser(user,userIdList);
                 break;
             case AppConstants.MSG_SRC_TYPE_ROLE:
-
+                List<IACEntry> userList = userService.getDeptRoleUser(srcRange,src);
+                addUser(userList,userIdList);
                 break;
             case AppConstants.MSG_SRC_TYPE_DEPT:
-
+                List<IACEntry> userdList = userService.getDeptUser(src,AppConstants.USER_TYPE_TEARCH);
+                addUser(userdList,userIdList);
                 break;
             case AppConstants.MSG_SRC_TYPE_GROUP:
-
+                List<IACEntry> usergList = userService.getGroupUser(src);
+                addUser(usergList,userIdList);
                 break;
             case AppConstants.MSG_SRC_TYPE_ORG:
-
+                List<IACEntry> useroList = userService.getOrgUser(src,AppConstants.USER_TYPE_TEARCH);
+                addUser(useroList,userIdList);
                 break;
         }
+    }
 
+    private void addUser(IACEntry user,List<Integer> userIdList){
+        if (ObjUtils.isNotBlankIACEntry(user)) {
+            userIdList.add(user.getValueAsInt("ID"));
+        }
+    }
+
+    private void addUser(List<IACEntry> userList,List<Integer> userIdList){
+        if (ObjUtils.isNotBlankIACEntryList(userList)) {
+            for(IACEntry user : userList){
+                addUser(user,userIdList);
+            }
+        }
+    }
+
+    public List<String> getPushClientByUsers(List<Integer> userIdList) {
+        HashMap<String,Object> params = new HashMap<String,Object>();
+        params.put("userIdList",userIdList);
+        List<HashMap<String,Object>> pushList = iacDB.getList("getPushClientByUsers",params);
+        if(pushList != null && pushList.size() > 0){
+            List<String> clientIdList = new ArrayList<String>(pushList.size());
+            for (HashMap<String,Object> push : pushList){
+                clientIdList.add((String)push.get("CLIENT_ID"));
+            }
+            return clientIdList;
+        }
+        return null;
     }
 }

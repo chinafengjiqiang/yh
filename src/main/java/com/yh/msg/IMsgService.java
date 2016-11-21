@@ -19,4 +19,6 @@ public interface IMsgService {
     List<IACEntry> getMsgRuleList(int msgId);
 
     IACEntry getMsgById(int msgId);
+
+    List<String> getPushClientByUsers(List<Integer> userIdList);
 }
