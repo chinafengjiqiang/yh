@@ -97,7 +97,7 @@ public class GtPushService implements IPush{
                 linkTemplate.setTitle(title);
                 linkTemplate.setText(content);
                 // 配置通知栏图标
-                linkTemplate.setLogo("push.png");
+                linkTemplate.setLogo("ic_yh.png");
                 // 配置通知栏网络图标
                 linkTemplate.setLogoUrl("");
                 // 设置通知是否响铃，震动，或者可清除
@@ -112,7 +112,7 @@ public class GtPushService implements IPush{
                 transmissionTemplate.setAppId(Global.APP_ID);
                 transmissionTemplate.setAppkey(Global.APP_KEY);
                 // 透传消息设置，1为强制启动应用，客户端接收到消息后就会立即启动应用；2为等待应用启动
-                transmissionTemplate.setTransmissionType(2);
+                transmissionTemplate.setTransmissionType(1);
                 transmissionTemplate.setTransmissionContent(transmissionContent);
                 return transmissionTemplate;
             default:
@@ -123,7 +123,7 @@ public class GtPushService implements IPush{
                 template.setTitle(title);
                 template.setText(content);
                 // 配置通知栏图标
-                template.setLogo("push.png");
+                template.setLogo("ic_yh.png");
                 // 配置通知栏网络图标
                 template.setLogoUrl("");
                 // 设置通知是否响铃，震动，或者可清除
