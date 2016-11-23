@@ -112,7 +112,7 @@ public class GtPushService implements IPush{
                 transmissionTemplate.setAppId(Global.APP_ID);
                 transmissionTemplate.setAppkey(Global.APP_KEY);
                 // 透传消息设置，1为强制启动应用，客户端接收到消息后就会立即启动应用；2为等待应用启动
-                transmissionTemplate.setTransmissionType(1);
+                transmissionTemplate.setTransmissionType(2);
                 transmissionTemplate.setTransmissionContent(transmissionContent);
                 return transmissionTemplate;
             default:
