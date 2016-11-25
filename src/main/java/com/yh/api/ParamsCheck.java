@@ -18,6 +18,12 @@ public class ParamsCheck {
     //推送绑定
     private static final String[] PUSH_BIND = {"userId","clientId"};
 
+    //修改用户密码
+    private static final String[] EDIT_USER_PASS = {"userId","userpass"};
+
+    //获取用户信息
+    private static final String[] GET_USER_INFO = {"userId"};
+
     public static boolean checkLogin(HashMap<String, String> params){
         if (params == null || params.size() == 0)
             return false;
@@ -37,6 +43,28 @@ public class ParamsCheck {
         if (params == null || params.size() == 0)
             return false;
         for (String key : PUSH_BIND) {
+            String value = params.get(key);
+            if (StringUtils.isBlank(value))
+                return false;
+        }
+        return true;
+    }
+
+    public static boolean checkEditUserPass(HashMap<String, String> params) {
+        if (params == null || params.size() == 0)
+            return false;
+        for (String key : EDIT_USER_PASS) {
+            String value = params.get(key);
+            if (StringUtils.isBlank(value))
+                return false;
+        }
+        return true;
+    }
+
+    public static boolean checkGetUserInfo(HashMap<String, String> params) {
+        if (params == null || params.size() == 0)
+            return false;
+        for (String key : GET_USER_INFO) {
             String value = params.get(key);
             if (StringUtils.isBlank(value))
                 return false;

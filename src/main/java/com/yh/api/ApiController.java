@@ -40,4 +40,34 @@ public class ApiController {
         return retMap;
     }
 
+
+    @RequestMapping(value = "editUserPass")
+    @ResponseBody
+    public HashMap<String,Object> editUserPass(HttpServletRequest request){
+        HashMap<String,String> params = ParamUtils.getDecoderParameters(request);
+        HashMap<String, Object> retMap = new HashMap<String, Object>();
+        int ret = apiService.editUserPass(params);
+        retMap.put("ret",ret);
+        return retMap;
+    }
+
+    @RequestMapping(value = "editUser")
+    @ResponseBody
+    public HashMap<String,Object> editUser(HttpServletRequest request){
+        HashMap<String,String> params = ParamUtils.getDecoderParameters(request);
+        HashMap<String, Object> retMap = new HashMap<String, Object>();
+        int ret = apiService.editUser(params);
+        retMap.put("ret",ret);
+        return retMap;
+    }
+
+    @RequestMapping(value = "getUserInfo")
+    @ResponseBody
+    public HashMap<String,Object> getUserInfo(HttpServletRequest request){
+        HashMap<String,String> params = ParamUtils.getDecoderParameters(request);
+        HashMap<String, Object> retMap = new HashMap<String, Object>();
+        int ret = apiService.getUserInfo(params,retMap);
+        retMap.put("ret",ret);
+        return retMap;
+    }
 }

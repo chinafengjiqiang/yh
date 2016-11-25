@@ -9,4 +9,10 @@ public interface IApi {
     int login(HashMap<String, String> params,HashMap<String, Object> retMap);
 
     int pushBind(HashMap<String, String> params);
+
+    int editUserPass(HashMap<String,String> params);
+
+    int editUser(HashMap<String,String> params);
+
+    int getUserInfo(HashMap<String,String> params,HashMap<String, Object> retMap);
 }

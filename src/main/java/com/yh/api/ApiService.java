@@ -4,6 +4,7 @@ import cn.com.iactive.db.IACEntry;
 import com.yh.user.IUserService;
 import com.yh.utils.NumUtils;
 import com.yh.utils.ObjUtils;
+import com.yh.utils.ParamUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -89,5 +90,77 @@ public class ApiService implements IApi{
             e.printStackTrace();
             return ErrorsFactory.Server_Exception;
        }
+    }
+
+    public int editUserPass(HashMap<String, String> params) {
+        try {
+            if (!ParamsCheck.checkEditUserPass(params)) {
+                return ErrorsFactory.Request_Params_ERROR;
+            }
+
+            String newPass = params.get("userpass");
+            boolean isValid = ParamUtils.isValidPass(newPass);
+            if (!isValid) {
+                return ErrorsFactory.ERROR_CODE_A;
+            }
+            int userId = NumUtils.String2Int(params.get("userId"));
+            IACEntry user = userService.getUserById(userId);
+            if (user == null || user.getValueAsInt("ID") == 0) {//用户不存在
+                return ErrorsFactory.OBJECT_NOT_EXIST;
+            }
+            params.clear();
+            params.put("ID",userId+"");
+            params.put("PASSWORD",newPass);
+            boolean ret = userService.updateUser(params);
+            if(ret)
+                return ErrorsFactory.Request_Success;
+            return ErrorsFactory.Request_Fail;
+        }catch (Exception e){
+            e.printStackTrace();
+            return ErrorsFactory.Server_Exception;
+        }
+    }
+
+    public int editUser(HashMap<String, String> params) {
+        try {
+            int userId = NumUtils.String2Int(params.get("userId"));
+            HashMap<String,String> user = new HashMap<String, String>();
+            user.put("ID",userId+"");
+            String mphone = params.get("mphone");
+            if(StringUtils.isNotBlank(mphone)){
+                user.put("MPHONE",mphone);
+            }
+            boolean ret = userService.updateUser(user);
+            if(ret)
+                return ErrorsFactory.Request_Success;
+            return ErrorsFactory.Request_Fail;
+        }catch (Exception e){
+            e.printStackTrace();
+            return ErrorsFactory.Server_Exception;
+        }
+    }
+
+    public int getUserInfo(HashMap<String, String> params, HashMap<String, Object> retMap) {
+        try {
+            if (!ParamsCheck.checkGetUserInfo(params)) {
+                return ErrorsFactory.Request_Params_ERROR;
+            }
+            int userId = NumUtils.String2Int(params.get("userId"));
+            IACEntry user = userService.getUserById(userId);
+            if(user != null){
+                retMap.put("userId",user.getValueAsInt("ID"));
+                retMap.put("usernane",user.getValueAsString("USERNAME"));
+                retMap.put("truename",user.getValueAsString("TRUENAME"));
+                retMap.put("userType",user.getValueAsInt("USER_TYPE"));
+                retMap.put("userOrg",user.getValueAsInt("PK_ORG"));
+                retMap.put("userDept",user.getValueAsInt("PK_DEPT"));
+                retMap.put("userRole",user.getValueAsInt("ROLE"));
+                retMap.put("mphone",user.getValueAsString("MPHONE"));
+            }
+            return ErrorsFactory.Request_Success;
+        }catch (Exception e){
+            e.printStackTrace();
+            return ErrorsFactory.Server_Exception;
+        }
     }
 }

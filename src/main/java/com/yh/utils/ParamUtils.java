@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -430,4 +431,11 @@ public class ParamUtils {
 	        }
 	        return params;
 	 }
+
+	public static boolean isValidPass(String str){
+		if (Pattern.matches("^[0-9a-zA-Z]{6,16}", str)) {
+			return true;
+		}
+		return false;
+	}
 }
