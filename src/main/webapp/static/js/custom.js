@@ -367,7 +367,6 @@ function delBatchWUrl(table,pkName,url) {
         Alert("请选择要删除的行！");
         return false;
     }
-
     var ids = [];
     $.each(delData,function (i,obj) {
         ids.push(obj[pkName])
