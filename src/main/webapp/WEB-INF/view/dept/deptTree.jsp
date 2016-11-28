@@ -75,6 +75,8 @@
             url = fq.contextPath+"/manage/dept/goGroupList?deptId="+id+"&orgId="+pid;
         }else if(config == "tearch_dept"){//教师管理
             url = fq.contextPath+"/manage/user/goTearchList?deptId="+id+"&orgId="+pid;
+        }else if(config == "lesson_dept"){//课程表
+            url = fq.contextPath+"/manage/lesson/goLessonList?deptId="+id;
         }
         return  url;
     }

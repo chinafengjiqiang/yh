@@ -1,0 +1,154 @@
+<%@ page language="java" contentType="text/html; charset=utf-8"
+         pageEncoding="utf-8"%>
+<div class="col-md-12">
+    <div class="widget">
+        <div class="widget-head">
+            <div class="pull-left">课程表</div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="widget-content panel-body">
+            <!-- Table -->
+            <table class="table table-striped table-bordered table-hover"
+                   id="table">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-md-4">
+                            <button type="button" id="exportTmp" class="btn btn-success" onclick="exportTemplate();">课程表模板</button>
+                            <button href="#importModal" data-toggle="modal" type="button" id="add_batch"
+                                    class="btn btn-success">导入</button>
+                            <button type="button" class="btn btn-danger" onclick="delLesson()">批量删除</button>
+                            <button type="button" class="btn btn-success" onclick="sendLesson()">课程表推送</button>
+                        </div>
+                        <div class="bread-crumb pull-right">
+                            <form action="" class="">
+                                <input id="listSearch" type="search" class="search" placeholder="Search">
+                                <button type="button" class="btn btn-default btn-search" onclick="search()">查询</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>名称</th>
+                    <th>学期</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+            <!-- Table ends -->
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var deptId = ${deptId};
+    var table;
+    var formValidate;
+    var columns = [
+        {'data':'ID'},
+        {'data':'NAME'},
+        {'data':'TERM'},
+        {
+            'data':'STATUS',
+            'render':function(data,type,full){
+                if(data == 0){
+                    return '未推送';
+                }else if(data == 1){
+                    return '已推送';
+                }
+            }
+        },
+        {
+            'data':null,
+            'render':function(data,type,full){
+                var btn = "<button href=\"#lessonDetail\" data-toggle=\"modal\" class=\"btn btn-xs btn-info edit\" onclick=\"showDetailList("+data.ID+")\"><i class=\"icon-list\"></i></button>";
+                return btn;
+            }
+        }
+    ];
+    $(function(){
+        var req = [{"name":"deptId","value":deptId}];
+        table = DataTablePack.serverTable($('#table'),'manage/lesson/getLessonList',req,columns,0);
+    });
+
+
+    formValidate = $("#mForm").validate({
+        /*rules : {
+            NAME : "required",
+
+        },
+        messages : {
+            NAME : "请输入分组名称",
+        },*/
+        submitHandler:function(form){
+            submitForm('mForm','manage/lesson/saveLesson',table,$('#editModal'));
+        }
+    });
+
+
+
+    $(document).ready(function(){
+        $("#add_batch").click(function(){
+            if(deptId <= 0){
+                Alert("请选择相应的年级！");
+                return false;
+            }
+            $("#importForm :input").val("");
+            $("#PK_DEPT_IMP").val(deptId);
+        });
+    });
+
+
+    function search(){
+        var search = $("#listSearch").val();
+        var req = [{"name":"search","value":search},{"name":"deptId","value":deptId}];
+        table = DataTablePack.serverTable($('#table'),'manage/lesson/getLessonList',req,columns,0);
+    }
+    function exportTemplate(){
+        window.open(fq.contextPath+"/manage/lesson/exportLessonTmp");
+    }
+
+
+    $("#importForm").validate({
+        rules : {
+            file : "required",
+        },
+        messages : {
+            file : "请选择要导入的文件",
+        },
+        submitHandler:function(form){
+            ajaxSubmit('importForm','manage/lesson/importLesson',table,$('#importModal'));
+        }
+    });
+
+    function delLesson(){
+        var url = fq.contextPath+"/manage/lesson/del";
+        delBatchWUrl(table,"ID",url);
+    }
+    
+    function sendLesson() {
+        var selData = table.rows('.selected').data();
+        if(selData.length <= 0){
+            Alert("请选择要推送的课程表！");
+            return false;
+        }
+        var deferred = $.Deferred();
+        Confirm({
+            msg: '确定要对课程表进行推送？',
+            onOk: function(){
+                var url = "";
+                $.post(url, function () {
+
+                }, 'json');
+            },
+            onCancel: function(){
+                deferred.reject();
+            }
+        })
+    }
+</script>

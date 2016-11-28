@@ -133,7 +133,7 @@ public class MsgService implements IMsgService{
                 if(userIdList.size() > 0){
                     String title = msg.getValueAsString("TITLE");
                     String content = msg.getValueAsString("CONTENT");
-                    String transmissionContent = title+"#@@#"+content;
+                    String transmissionContent = AppConstants.PUSH_CMD_MESSAGE+AppConstants.PUSH_SPLIT+title+AppConstants.PUSH_SPLIT+content;
                     List<String> clientIdList = getPushClientByUsers(userIdList);
                     if (clientIdList != null && clientIdList.size() > 0) {
                         IPush push = new GtPushService();

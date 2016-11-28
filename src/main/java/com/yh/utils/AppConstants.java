@@ -41,4 +41,19 @@ public interface AppConstants {
      * 权限对象访问范围
      */
     int MSG_RULE_RANGE_ALL = 0;//全部
+
+
+    /**
+     * 消息推送部分分隔标示
+     */
+    String PUSH_SPLIT = "#@@#";
+
+    /**
+     * 推送命令号
+     */
+    int PUSH_CMD_MESSAGE = 1;//消息
+
+    int PUSH_CMD_LESSON = 2;//课程表
+
+    int PUSH_CMD_PLAN = 3;//教学计划
 }

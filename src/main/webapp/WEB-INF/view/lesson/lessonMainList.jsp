@@ -7,19 +7,19 @@
             <!-- Content -->
             <div class="row">
                 <div class="col-md-12">
-                    <jsp:include page="deptTree.jsp">
-                        <jsp:param name="config" value="group_dept" />
+                    <jsp:include page="../dept/deptTree.jsp">
+                        <jsp:param name="config" value="lesson_dept" />
                     </jsp:include>
                     <%--mian--%>
                     <div id="mainbar-list">
                         <!--异步引入页面-->
-                        <jsp:include page="${contextPath}/manage/dept/goGroupList"></jsp:include>
+                        <jsp:include page="${contextPath}/manage/dept/goLessonList"></jsp:include>
                     </div>
                 </div>
             </div>
+        </div>
     </div>
+    <!-- 弹出窗口的页面 -->
 </div>
-<!-- 弹出窗口的页面 -->
-</div>
-<jsp:include page="editGroup.jsp"></jsp:include>
-<jsp:include page="../user/showGroupUser.jsp"></jsp:include>
+<jsp:include page="edit.jsp"></jsp:include>
+<jsp:include page="showLessonDetail.jsp"></jsp:include>

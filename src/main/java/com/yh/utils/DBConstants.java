@@ -33,6 +33,14 @@ public interface DBConstants {
 
     String TBL_PUSH_BIND_NAME = "tbl_push_bind";
     String TBL_PUSH_BIND_PK = "ID";
+
+    String TBL_LESSON_NAME = "lesson_define";
+    String TBL_LESSON_PK = "ID";
+
+    String TBL_LESSON_DETAIL_NAME = "lesson_define_detail";
+    String TBL_LESSON_DETAIL_PK = "ID";
+    String TBL_LESSON_DETAIL_FPK = "LESSON_ID";
+
 }
 
 

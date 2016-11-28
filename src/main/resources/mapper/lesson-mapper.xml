@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="LessonMapper">
+    <select id="getLessonList" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+        select * from lesson_define WHERE (1=1)
+        <if test="DEPT_ID != null">
+            AND DEPT_ID = #{DEPT_ID}
+        </if>
+        <if test="SEARCH!=null">
+            AND NAME LIKE #{SEARCH}
+        </if>
+    </select>
+
+    <select id="getDeptLesson" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+        select * from lesson_define WHERE DEPT_ID = #{DEPT_ID} and TERM = #{TERM}
+    </select>
+
+    <select id="getLessonDetail" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+        select * from lesson_define_detail WHERE LESSON_ID = #{LESSON_ID}
+    </select>
+
+
+</mapper>

@@ -281,7 +281,7 @@ function del(tableName,pkName,table,ids) {
     })
 }
 
-function del(tableName,pkName,table,ids,callback) {
+function delWcallback(tableName,pkName,table,ids,callback) {
     var deferred = $.Deferred();
     Confirm({
         msg: '确定要删除数据？',
@@ -361,7 +361,32 @@ function delOptWRef(ids,tableName,pkName,refFun){
 }
 
 
+function delBatchWUrl(table,pkName,url) {
+    var delData = table.rows('.selected').data();
+    if(delData.length <= 0){
+        Alert("请选择要删除的行！");
+        return false;
+    }
 
+    var ids = [];
+    $.each(delData,function (i,obj) {
+        ids.push(obj[pkName])
+    });
+    var deferred = $.Deferred();
+    Confirm({
+        msg: '确定要删除数据？',
+        onOk: function(){
+            url += "?ids="+ids;
+            $.post(url, function () {
+                table.ajax.reload(null, false); // 刷新表格数据，分页信息不会重置
+            }, 'json');
+        },
+        onCancel: function(){
+            deferred.reject();
+        }
+    })
+
+}
 
 
 /*
@@ -514,4 +539,46 @@ function showResponse(responseText, statusText){
             Alert("操作失败！");
         }
     }
+};
+
+
+/**
+ * StringBuffer Class, to join two string is the most use
+ *
+ */
+function StringBuffer()
+{
+    this._strings = [];
+    if(arguments.length==1)
+    {
+        this._strings.push(arguments[0]);
+    }
+}
+
+StringBuffer.prototype.append = function(str)
+{
+    this._strings.push(str);
+    return this;
+};
+
+StringBuffer.prototype.toString = function()
+{
+    return this._strings.join("");
+};
+
+/* 返回长度 */
+StringBuffer.prototype.length = function()
+{
+    var str = this._strings.join("");
+    return str.length;
+};
+
+/* 删除后几位字符 */
+StringBuffer.prototype.del = function(num)
+{
+    var len = this.length();
+    var str = this.toString();
+    str = str.slice(0,len-num);
+    this._strings = [];
+    this._strings.push(str);
 };
