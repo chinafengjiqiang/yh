@@ -12,12 +12,14 @@
                    id="table">
                 <div class="row">
                     <div class="col-md-12">
-                        <div class="col-md-4">
+                        <div class="col-md-8">
                             <button type="button" id="exportTmp" class="btn btn-success" onclick="exportTemplate();">课程表模板</button>
                             <button href="#importModal" data-toggle="modal" type="button" id="add_batch"
                                     class="btn btn-success">导入</button>
                             <button type="button" class="btn btn-danger" onclick="delLesson()">批量删除</button>
                             <button type="button" class="btn btn-success" onclick="sendLesson()">课程表推送</button>
+                            <button href="#planModal" data-toggle="modal" type="button" id="import_plan" onclick="toImportPlan()"
+                                    class="btn btn-success">导入计划</button>
                         </div>
                         <div class="bread-crumb pull-right">
                             <form action="" class="">
@@ -93,6 +95,11 @@
 
 
     $(document).ready(function(){
+
+        $("#planModal").on("hidden.bs.modal", function() {
+            $(this).removeData("bs.modal");
+        });
+
         $("#add_batch").click(function(){
             if(deptId <= 0){
                 Alert("请选择相应的年级！");
@@ -141,9 +148,18 @@
         Confirm({
             msg: '确定要对课程表进行推送？',
             onOk: function(){
-                var url = "";
-                $.post(url, function () {
-
+                var ids = [];
+                $.each(selData,function (i,obj) {
+                    ids.push(obj["ID"])
+                });
+                var url = fq.contextPath+"/manage/lesson/sendLesson";
+                url += "?ids="+ids;
+                $.post(url, function (data) {
+                    if(data == 1){
+                        Alert("推送完成");
+                    }else {
+                        Alert("推送失败");
+                    }
                 }, 'json');
             },
             onCancel: function(){
@@ -151,4 +167,40 @@
             }
         })
     }
+    
+    function toImportPlan() {
+        var selData = table.rows('.selected').data();
+        if(selData.length <= 0){
+            Alert("请选择课程表！");
+            return false;
+        }
+        if(selData.length > 1){
+            Alert("只能选择一个课程表！");
+            return false;
+        }
+        var id = selData[0].ID;
+        /*var url = fq.contextPath+"/manage/lesson/gotoImportPlan?lessonId="+id;
+        $("#planModal").modal({
+            remote: url,
+        });*/
+        $("#planForm :input").val("");
+        $("#LESSON_ID").val(id);
+    }
+
+    $("#planForm").validate({
+        rules : {
+            startTime:"required",
+            endTime:"required",
+            file_plan : "required",
+        },
+        messages : {
+            startTime:"请输入开始时间",
+            endTime:"请输入结束时间",
+            file_plan : "请选择要导入的文件",
+        },
+        submitHandler:function(form){
+            ajaxSubmit('importForm','manage/lesson/importPlan',table,$('#planForm'));
+        }
+    });
+
 </script>

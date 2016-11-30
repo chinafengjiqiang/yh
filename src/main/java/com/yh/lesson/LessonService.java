@@ -5,10 +5,11 @@ import cn.com.iactive.db.IACEntry;
 import com.yh.model.DataModel;
 import com.yh.model.DelModel;
 import com.yh.model.RetVO;
-import com.yh.utils.DBConstants;
-import com.yh.utils.ListSearchUtil;
-import com.yh.utils.ObjUtils;
-import com.yh.utils.SpringUtil;
+import com.yh.push.Global;
+import com.yh.push.GtPushService;
+import com.yh.push.IPush;
+import com.yh.user.IUserService;
+import com.yh.utils.*;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.hssf.util.CellRangeAddressList;
@@ -21,6 +22,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import static org.bouncycastle.asn1.x500.style.RFC4519Style.title;
+
 /**
  * Created by FQ.CHINA on 2016/11/28.
  */
@@ -30,6 +33,8 @@ public class LessonService implements ILessonService{
     private final static int LESSON_NUM = 8;
     @Autowired
     private IACDB<HashMap<String,Object>> iacDB;
+    @Autowired
+    private IUserService userService;
 
     public HashMap<String, Object> getLessonList(DataModel dataModel) {
         HashMap<String,Object> params = ListSearchUtil.getSearchMap(dataModel);
@@ -184,6 +189,12 @@ public class LessonService implements ILessonService{
         return iacDB.getIACEntryList("getLessonDetail",lessonId);
     }
 
+    public List<HashMap<String, Object>> getLessonDetails(int lessonId) {
+        HashMap<String,Object> params = ObjUtils.getObjMap();
+        params.put("LESSON_ID",lessonId);
+        return iacDB.getList("getLessonDetail",lessonId);
+    }
+
     HashMap<Integer,IACEntry> ldMap = null;
     public List<HashMap<String,Object>> getLessonTable(int lessonId) {
         List<IACEntry> ldList = getLessonDetail(lessonId);
@@ -221,5 +232,247 @@ public class LessonService implements ILessonService{
             }
 
         }
+    }
+
+    public int sendLesson(String ids) {
+        try {
+            String[] idArr = ObjUtils.splitStr(ids);
+            if(idArr != null){
+                for (String s : idArr) {
+                    if (StringUtils.isNotBlank(s)) {
+                        int lessonId = Integer.parseInt(s);
+                        IACEntry lesson = getLesson(lessonId);
+                        if(ObjUtils.isBlankIACEntry(lesson))
+                            continue;
+                        int deptId = lesson.getValueAsInt("DEPT_ID");
+                        List<IACEntry> dList = this.getLessonDetail(lessonId);
+                        if(ObjUtils.isNotBlankIACEntryList(dList)){
+                            String strHead = AppConstants.PUSH_CMD_LESSON + AppConstants.PUSH_SPLIT;
+                            StringBuilder details = new StringBuilder();
+                            for (IACEntry entry : dList) {
+                                int num = entry.getValueAsInt("LESSON_NUM");
+                                String time = entry.getValueAsString("LESSON_TIME");
+                                String one = entry.getValueAsString("WEEK_ONE_LESSON");
+                                String tow = entry.getValueAsString("WEEK_TWO_LESSON");
+                                String three = entry.getValueAsString("WEEK_THREE_LESSON");
+                                String four = entry.getValueAsString("WEEK_FOUR_LESSON");
+                                String five = entry.getValueAsString("WEEK_FIVE_LESSON");
+                                details.append(num).append(",").append(time).append(",");
+                                details.append(one).append(",").append(tow).append(",");
+                                details.append(three).append(",").append(four).append(",");
+                                details.append(five).append(";");
+                            }
+                            String transmissionContent = strHead+details;
+                            //得到部门下的用户clientId
+                            List<String> clientIds = userService.getDeptUserClientId(deptId);
+                            if(clientIds.size() > 0){
+                                IPush push = new GtPushService();
+                                boolean ret = push.pushToList(SpringUtil.getMessage("lesson.push.title"),SpringUtil.getMessage("lesson.push.content")
+                                        ,transmissionContent,clientIds, Global.TMPLT_TRANSMISSION);
+                            }
+                        }
+                    }
+                }
+            }
+            return 1;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    public IACEntry getLesson(int id) {
+        return iacDB.getSelectOneIACEntry(DBConstants.TBL_LESSON_NAME,id);
+    }
+
+    public boolean importPlan(List<List<String>> list, int lessonId, String startTime, String endTime) {
+        HashMap<String,HashMap<String,List<String>>> resPlanMap = new HashMap<String,HashMap<String,List<String>>>();
+        if(list!=null&&list.size()>0){
+            for(int i=2;i<list.size();i++){
+                List<String> resList = list.get(i);
+                if(resList !=null&&resList.size()>0){
+                    String week = getWeek(resList.get(0));
+                    HashMap<String,List<String>> weekPanMap = resPlanMap.get(week);
+                    if(weekPanMap == null){
+                        weekPanMap = new HashMap<String,List<String>>();
+                        resPlanMap.put(week, weekPanMap);
+                    }
+                    for(int j = 1;j<resList.size();j++){
+                        String category = list.get(1).get(j).trim();
+                        List<String> categoryList = weekPanMap.get(category);
+                        if(categoryList == null){
+                            categoryList = new ArrayList<String>();
+                            weekPanMap.put(category,categoryList);
+                        }
+                        String content = resList.get(j);
+                        if(StringUtils.isNotBlank(content))
+                            categoryList.add(content);
+                    }
+                }
+            }
+        }
+
+        List<HashMap<String,Object>> allPlans = new ArrayList<HashMap<String,Object>>();
+
+        List<HashMap<String,Object>> lessonList = getLessonDetails(lessonId);
+        HashMap<String,Object> planMap= null;
+        if(lessonList != null && lessonList.size() > 0){
+            for(HashMap<String,Object> lesson : lessonList){
+                int lessonNum = (Integer)lesson.get("LESSON_NUM");
+                String oneLesson = (String)lesson.get("WEEK_ONE_LESSON");
+                HashMap<String,List<String>> cateoryMap =  resPlanMap.get("WEEK_ONE_LESSON");
+                if(cateoryMap != null){
+                    List<String> planList = cateoryMap.get(oneLesson);
+                    if(planList!=null&&planList.size()>0){
+                        planMap = new HashMap<String,Object>();
+                        planMap.put("LESSON_ID",lessonId);
+                        planMap.put("LESSON_NUM",lessonNum);
+                        planMap.put("LESSON_WEEK",1);
+                        planMap.put("LESSON_NAME",oneLesson);
+                        planMap.put("LESSON_CONTENT",planList.get(0));
+                        planMap.put("START_DATE",DateUtils.stringsToDate(startTime));
+                        planMap.put("END_DATE",DateUtils.stringsToDate(endTime));
+                        planList.remove(0);
+                        allPlans.add(planMap);
+                    }
+                }
+                String twoLesson = (String)lesson.get("WEEK_TWO_LESSON");
+                HashMap<String,List<String>> cateory2Map =  resPlanMap.get("WEEK_TWO_LESSON");
+                if(cateory2Map != null){
+                    List<String> planList = cateory2Map.get(twoLesson);
+                    if(planList!=null&&planList.size()>0){
+                        planMap = new HashMap<String,Object>();
+                        planMap.put("LESSON_ID",lessonId);
+                        planMap.put("LESSON_NUM",lessonNum);
+                        planMap.put("LESSON_WEEK",2);
+                        planMap.put("LESSON_NAME",twoLesson);
+                        planMap.put("LESSON_CONTENT",planList.get(0));
+                        planMap.put("START_DATE",DateUtils.stringsToDate(startTime));
+                        planMap.put("END_DATE",DateUtils.stringsToDate(endTime));
+                        planList.remove(0);
+                        allPlans.add(planMap);
+                    }
+                }
+                String threeLesson = (String)lesson.get("WEEK_THREE_LESSON");
+                HashMap<String,List<String>> cateory3Map =  resPlanMap.get("WEEK_THREE_LESSON");
+                if(cateory3Map != null){
+                    List<String> planList = cateory3Map.get(threeLesson);
+                    if(planList!=null&&planList.size()>0){
+                        planMap = new HashMap<String,Object>();
+                        planMap.put("LESSON_ID",lessonId);
+                        planMap.put("LESSON_NUM",lessonNum);
+                        planMap.put("LESSON_WEEK",3);
+                        planMap.put("LESSON_NAME",threeLesson);
+                        planMap.put("LESSON_CONTENT",planList.get(0));
+                        planMap.put("START_DATE",DateUtils.stringsToDate(startTime));
+                        planMap.put("END_DATE",DateUtils.stringsToDate(endTime));
+                        planList.remove(0);
+                        allPlans.add(planMap);
+                    }
+                }
+                String fourLesson = (String)lesson.get("WEEK_FOUR_LESSON");
+                HashMap<String,List<String>> cateory4Map =  resPlanMap.get("WEEK_FOUR_LESSON");
+                if(cateory4Map != null){
+                    List<String> planList = cateory4Map.get(fourLesson);
+                    if(planList!=null&&planList.size()>0){
+                        planMap = new HashMap<String,Object>();
+                        planMap.put("LESSON_ID",lessonId);
+                        planMap.put("LESSON_NUM",lessonNum);
+                        planMap.put("LESSON_WEEK",4);
+                        planMap.put("LESSON_NAME",fourLesson);
+                        planMap.put("LESSON_CONTENT",planList.get(0));
+                        planMap.put("START_DATE",DateUtils.stringsToDate(startTime));
+                        planMap.put("END_DATE",DateUtils.stringsToDate(endTime));
+                        planList.remove(0);
+                        allPlans.add(planMap);
+                    }
+                }
+                String fiveLesson = (String)lesson.get("WEEK_FIVE_LESSON");
+                HashMap<String,List<String>> cateory5Map =  resPlanMap.get("WEEK_FIVE_LESSON");
+                if(cateory5Map != null){
+                    List<String> planList = cateory5Map.get(fiveLesson);
+                    if(planList!=null&&planList.size()>0){
+                        planMap = new HashMap<String,Object>();
+                        planMap.put("LESSON_ID",lessonId);
+                        planMap.put("LESSON_NUM",lessonNum);
+                        planMap.put("LESSON_WEEK",5);
+                        planMap.put("LESSON_NAME",fiveLesson);
+                        planMap.put("LESSON_CONTENT",planList.get(0));
+                        planMap.put("START_DATE",DateUtils.stringsToDate(startTime));
+                        planMap.put("END_DATE",DateUtils.stringsToDate(endTime));
+                        planList.remove(0);
+                        allPlans.add(planMap);
+                    }
+                }
+                String sixLesson = (String)lesson.get("WEEK_SIX_LESSON");
+                HashMap<String,List<String>> cateory6Map =  resPlanMap.get("WEEK_SIX_LESSON");
+                if(cateory6Map != null){
+                    List<String> planList = cateory6Map.get(fiveLesson);
+                    if(planList!=null&&planList.size()>0){
+                        planMap = new HashMap<String,Object>();
+                        planMap.put("LESSON_ID",lessonId);
+                        planMap.put("LESSON_NUM",lessonNum);
+                        planMap.put("LESSON_WEEK",6);
+                        planMap.put("LESSON_NAME",sixLesson);
+                        planMap.put("LESSON_CONTENT",planList.get(0));
+                        planMap.put("START_DATE",DateUtils.stringsToDate(startTime));
+                        planMap.put("END_DATE",DateUtils.stringsToDate(endTime));
+                        planList.remove(0);
+                        allPlans.add(planMap);
+                    }
+                }
+                String sevenLesson = (String)lesson.get("WEEK_SEVEN_LESSON");
+                HashMap<String,List<String>> cateory7Map =  resPlanMap.get("WEEK_SEVEN_LESSON");
+                if(cateory7Map != null){
+                    List<String> planList = cateory7Map.get(fiveLesson);
+                    if(planList!=null&&planList.size()>0){
+                        planMap = new HashMap<String,Object>();
+                        planMap.put("LESSON_ID",lessonId);
+                        planMap.put("LESSON_NUM",lessonNum);
+                        planMap.put("LESSON_WEEK",7);
+                        planMap.put("LESSON_NAME",sevenLesson);
+                        planMap.put("LESSON_CONTENT",planList.get(0));
+                        planMap.put("START_DATE",DateUtils.stringsToDate(startTime));
+                        planMap.put("END_DATE",DateUtils.stringsToDate(endTime));
+                        planList.remove(0);
+                        allPlans.add(planMap);
+                    }
+                }
+            }
+        }
+
+        //courseService.insertLessonPlan(allPlans);
+        return false;
+    }
+
+
+    private String getWeek(String date){
+        String res = "";
+        switch (date) {
+            case "一":
+                res = "WEEK_ONE_LESSON";
+                break;
+            case "二":
+                res = "WEEK_TWO_LESSON";
+                break;
+            case "三":
+                res = "WEEK_THREE_LESSON";
+                break;
+            case "四":
+                res = "WEEK_FOUR_LESSON";
+                break;
+            case "五":
+                res = "WEEK_FIVE_LESSON";
+                break;
+            case "六":
+                res = "WEEK_SIX_LESSON";
+                break;
+            case "七":
+                res = "WEEK_SEVEN_LESSON";
+                break;
+            default:
+                break;
+        }
+        return res;
     }
 }

@@ -552,5 +552,16 @@ public class DateUtils {
                 return 0L;
               }
 		    }
+
+
+	public static Date stringsToDate(String date){
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+		try {
+			return  sdf.parse(date);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 		    
 }

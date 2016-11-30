@@ -241,4 +241,18 @@ public class UserService implements IUserService{
         params.put("ROLE",role);
         return iacDB.getIACEntryList("getDeptRoleUser",params);
     }
+
+    public List<String> getDeptUserClientId(int deptId) {
+        HashMap<String,Object> params = ObjUtils.getObjMap();
+        params.put("PK_DEPT",deptId);
+        params.put("IS_VALID",1);
+        List<IACEntry> retList = iacDB.getIACEntryList("getDeptUserClientId",params);
+        List<String> clientList = new ArrayList<String>();
+        if (ObjUtils.isNotBlankIACEntryList(retList)) {
+            for (IACEntry entry : retList) {
+                clientList.add(entry.getValueAsString("CLIENT_ID"));
+            }
+        }
+        return clientList;
+    }
 }

@@ -137,4 +137,45 @@ public class LessonController {
         int lessonId = ParamUtils.getIntParameter(request,"lId",0);
         return lessonService.getLessonTable(lessonId);
     }
+
+    @RequestMapping(value = "sendLesson")
+    @ResponseBody
+    public int sendLesson(HttpServletRequest request){
+        String ids = ParamUtils.getParameter(request,"ids","");
+        return lessonService.sendLesson(ids);
+    }
+
+    @RequestMapping(value = "gotoImportPlan")
+    public String gotoImportPlan(HttpServletRequest request){
+        int lessonId = ParamUtils.getIntParameter(request,"lessonId",0);
+        request.setAttribute("lessonId",lessonId);
+        return "lesson/importPlan";
+    }
+
+
+    @RequestMapping(value = "importPlan")
+    @ResponseBody
+    public RetVO importPlan(@RequestParam MultipartFile file, HttpServletRequest request){
+        RetVO ret = new RetVO();
+        try {
+            String extName = FileUtils.getFileExt(file.getOriginalFilename());
+            if (!"xls".equals(extName)) {//判断文件格式
+                ret.setSuccess(false);
+                ret.setMsg(SpringUtil.getMessage("file.format.error"));
+                return ret;
+            }
+            int lessonId = ParamUtils.getIntParameter(request,"LESSON_ID",0);
+            String startTime = ParamUtils.getParameter(request,"startTime","");
+            String endTime = ParamUtils.getParameter(request,"endTime","");
+            ImportExecl poi = new ImportExecl();
+            List<List<String>> list = poi.read(file.getInputStream(), true);
+            lessonService.importPlan(list,lessonId,startTime,endTime);
+            ret.setSuccess(true);
+        }catch (Exception e){
+            e.printStackTrace();
+            ret.setSuccess(false);
+        }
+        return ret;
+    }
+
 }

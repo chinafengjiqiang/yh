@@ -65,4 +65,11 @@
             #{userId}
         </foreach>
     </select>
+
+    <select id="getDeptUserClientId" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+        SELECT CLIENT_ID
+        FROM tbl_push_bind
+        WHERE USER_ID
+        IN (SELECT ID FROM tbl_user WHERE PK_DEPT = #{PK_DEPT} AND IS_VALID = #{IS_VALID})
+    </select>
 </mapper>

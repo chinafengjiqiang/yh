@@ -23,3 +23,4 @@
 </div>
 <jsp:include page="edit.jsp"></jsp:include>
 <jsp:include page="showLessonDetail.jsp"></jsp:include>
+<jsp:include page="importPlan.jsp"></jsp:include>

@@ -29,6 +29,14 @@ public interface ILessonService {
 
     List<IACEntry> getLessonDetail(int lessonId);
 
+    List<HashMap<String,Object>> getLessonDetails(int lessonId);
+
     List<HashMap<String,Object>> getLessonTable(int lessonId);
+
+    int sendLesson(String ids);
+
+    IACEntry getLesson(int id);
+
+    boolean importPlan(List<List<String>> list,int lessonId,String startTime,String endTime);
 
 }

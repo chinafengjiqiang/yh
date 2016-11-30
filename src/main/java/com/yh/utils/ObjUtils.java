@@ -110,4 +110,15 @@ public class ObjUtils {
     public static HashMap<String,String> getStringMap(){
         return new HashMap<String, String>();
     }
+
+    public static String[] splitStr(String str,String split){
+        if(str != null && str.length() > 0){
+            return str.split(split);
+        }
+        return null;
+    }
+
+    public static String[] splitStr(String str){
+        return splitStr(str,",");
+    }
 }

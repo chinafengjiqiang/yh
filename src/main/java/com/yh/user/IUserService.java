@@ -46,4 +46,6 @@ public interface IUserService {
     List<IACEntry> getOrgUser(int orgId,int userType);
 
     List<IACEntry> getDeptRoleUser(int deptId,int role);
+
+    List<String> getDeptUserClientId(int deptId);
 }
