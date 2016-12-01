@@ -67,4 +67,5 @@
          $(id).popover('show');
      });
  }
+
 </script>
