@@ -240,6 +240,21 @@
     <pluginManagement>
       <plugins>
         <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.1</version>
+          <configuration>
+            <source>1.8</source>
+            <target>1.8</target>
+            <encoding>UTF-8</encoding>
+            <compilerArguments>
+              <verbose />
+              <bootclasspath>${java.home}/lib/rt.jar</bootclasspath>
+            </compilerArguments>
+          </configuration>
+        </plugin>
+
+        <plugin>
           <groupId>org.apache.tomcat.maven</groupId>
           <artifactId>tomcat7-maven-plugin</artifactId>
           <version>${tomcat-maven-plugin.version}</version>
@@ -247,7 +262,6 @@
             <uriEncoding>${project.encoding}</uriEncoding>
           </configuration>
         </plugin>
-
       </plugins>
     </pluginManagement>
   </build>

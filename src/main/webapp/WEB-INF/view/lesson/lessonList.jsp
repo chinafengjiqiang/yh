@@ -20,6 +20,7 @@
                             <button type="button" class="btn btn-success" onclick="sendLesson()">课程表推送</button>
                             <button href="#planModal" data-toggle="modal" type="button" id="import_plan" onclick="toImportPlan()"
                                     class="btn btn-success">导入计划</button>
+                            <button type="button" class="btn btn-danger" onclick="delLessonPlan()">删除计划</button>
                         </div>
                         <div class="bread-crumb pull-right">
                             <form action="" class="">
@@ -35,7 +36,7 @@
                     <th>名称</th>
                     <th>学期</th>
                     <th>状态</th>
-                    <th>操作</th>
+                    <th>课程表及计划</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -199,8 +200,38 @@
             file_plan : "请选择要导入的文件",
         },
         submitHandler:function(form){
-            ajaxSubmit('importForm','manage/lesson/importPlan',table,$('#planForm'));
+            ajaxSubmit('planForm','manage/lesson/importPlan',table,$('#planModal'));
         }
     });
 
+    function delLessonPlan(){
+        var selData = table.rows('.selected').data();
+        if(selData.length <= 0){
+            Alert("请选择相应的课程表！");
+            return false;
+        }
+        var deferred = $.Deferred();
+        Confirm({
+            msg: '确定要删除此课程表中的计划？',
+            onOk: function(){
+                var ids = [];
+                $.each(selData,function (i,obj) {
+                    ids.push(obj["ID"])
+                });
+                var url = fq.contextPath+"/manage/lesson/deletePlans";
+                url += "?ids="+ids;
+                $.post(url, function (result) {
+                    deferred.reject();
+                    if(result.success){
+                        alert("操作成功");
+                    }else {
+                        alert("操作失败");
+                    }
+                }, 'json');
+            },
+            onCancel: function(){
+                deferred.reject();
+            }
+        })
+    }
 </script>

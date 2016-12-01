@@ -39,4 +39,9 @@ public interface ILessonService {
 
     boolean importPlan(List<List<String>> list,int lessonId,String startTime,String endTime);
 
+    boolean addLessonPlans(List<HashMap<String, Object>> plans);
+
+    void deleteLessonPlans(int lessonId);
+
+    IACEntry getPlan(int lessonId,int week,int lessonNum);
 }

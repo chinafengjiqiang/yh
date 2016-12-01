@@ -21,5 +21,15 @@
         select * from lesson_define_detail WHERE LESSON_ID = #{LESSON_ID}
     </select>
 
+    <delete id="deleteLessonPlans">
+        <![CDATA[delete from lesson_plans where LESSON_ID = #{lessonId} and START_DATE <= #{date} and END_DATE >= #{date} ]]>
+    </delete>
+
+    <select id="getPlanDetail" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+        select * from lesson_plans
+        WHERE LESSON_ID = #{LESSON_ID}
+        AND LESSON_WEEK = #{LESSON_WEEK}
+        AND LESSON_NUM = #{LESSON_NUM}
+    </select>
 
 </mapper>

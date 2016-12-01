@@ -5,6 +5,7 @@ import com.yh.model.DataModel;
 import com.yh.model.DelModel;
 import com.yh.model.RetVO;
 import com.yh.utils.*;
+import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -155,10 +156,10 @@ public class LessonController {
 
     @RequestMapping(value = "importPlan")
     @ResponseBody
-    public RetVO importPlan(@RequestParam MultipartFile file, HttpServletRequest request){
+    public RetVO importPlan(@RequestParam MultipartFile file_plan, HttpServletRequest request){
         RetVO ret = new RetVO();
         try {
-            String extName = FileUtils.getFileExt(file.getOriginalFilename());
+            String extName = FileUtils.getFileExt(file_plan.getOriginalFilename());
             if (!"xls".equals(extName)) {//判断文件格式
                 ret.setSuccess(false);
                 ret.setMsg(SpringUtil.getMessage("file.format.error"));
@@ -168,7 +169,7 @@ public class LessonController {
             String startTime = ParamUtils.getParameter(request,"startTime","");
             String endTime = ParamUtils.getParameter(request,"endTime","");
             ImportExecl poi = new ImportExecl();
-            List<List<String>> list = poi.read(file.getInputStream(), true);
+            List<List<String>> list = poi.read(file_plan.getInputStream(), true);
             lessonService.importPlan(list,lessonId,startTime,endTime);
             ret.setSuccess(true);
         }catch (Exception e){
@@ -178,4 +179,37 @@ public class LessonController {
         return ret;
     }
 
+    @RequestMapping(value = "deletePlans")
+    @ResponseBody
+    public RetVO deletePlans(HttpServletRequest request){
+        RetVO ret = new RetVO();
+        try {
+            String  ids = ParamUtils.getParameter(request, "ids","");
+            String[] idArr = ObjUtils.splitStr(ids);
+            if(idArr != null){
+                for(String id : idArr){
+                    if(StringUtils.isNotBlank(id)){
+                        lessonService.deleteLessonPlans(Integer.parseInt(id));
+                    }
+                }
+            }
+            ret.setSuccess(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            ret.setSuccess(false);
+        }
+        return ret;
+    }
+
+    @RequestMapping(value = "getPlanContent")
+    @ResponseBody
+    public String getPlanContent(HttpServletRequest request){
+        int lessonId = ParamUtils.getIntParameter(request,"lessonId",0);
+        int week = ParamUtils.getIntParameter(request,"lessonWeek",0);
+        int num = ParamUtils.getIntParameter(request,"lessonNum",0);
+        IACEntry plan = lessonService.getPlan(lessonId,week,num);
+        if(plan != null)
+            return plan.getValueAsString("LESSON_CONTENT");
+        return SpringUtil.getMessage("lesson.plan.noexist");
+    }
 }

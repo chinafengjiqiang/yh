@@ -17,12 +17,8 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
-import static org.bouncycastle.asn1.x500.style.RFC4519Style.title;
 
 /**
  * Created by FQ.CHINA on 2016/11/28.
@@ -440,9 +436,8 @@ public class LessonService implements ILessonService{
                 }
             }
         }
-
-        //courseService.insertLessonPlan(allPlans);
-        return false;
+        this.addLessonPlans(allPlans);
+        return true;
     }
 
 
@@ -474,5 +469,36 @@ public class LessonService implements ILessonService{
                 break;
         }
         return res;
+    }
+
+    @Override
+    public boolean addLessonPlans(List<HashMap<String, Object>> plans) {
+        if(plans != null){
+            for(HashMap<String,Object> plan : plans){
+                if(plan != null){
+                    iacDB.insertDynamic(DBConstants.TBL_LESSON_PLAN_NAME,plan);
+                }
+            }
+        }
+        return true;
+    }
+
+    public void deleteLessonPlans(int lessonId) {
+        HashMap<String,Object> params = new HashMap<String, Object>();
+        params.put("lessonId",lessonId);
+        params.put("date",new Date());
+        iacDB.delete("deleteLessonPlans", params);
+    }
+
+    @Override
+    public IACEntry getPlan(int lessonId, int week, int lessonNum) {
+        HashMap<String,Object> params = ObjUtils.getObjMap();
+        params.put("LESSON_ID",lessonId);
+        params.put("LESSON_WEEK",week);
+        params.put("LESSON_NUM",lessonNum);
+        List<IACEntry> retList = iacDB.getIACEntryList("getPlanDetail",params);
+        if(ObjUtils.isNotBlankIACEntryList(retList))
+            return retList.get(0);
+        return null;
     }
 }

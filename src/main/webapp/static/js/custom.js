@@ -529,7 +529,7 @@ function showRequest(formData, jqForm, options){
 function showResponse(responseText, statusText){
     if (responseText.success) {
         mTable.ajax.reload( null, false ); // 刷新表格数据，分页信息不会重置
-        mModel.modal('hide')
+        mModel.modal('hide');
     } else {
         var msg = responseText.msg;
         if(msg != ""){

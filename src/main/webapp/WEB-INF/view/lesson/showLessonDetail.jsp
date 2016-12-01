@@ -2,11 +2,11 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
          pageEncoding="utf-8"%>
 <div aria-hidden="true" aria-labelledby="lessonDetail" role="dialog" tabindex="-1" id="lessonDetail" class="modal fade in">
-    <div class="modal-dialog">
+    <div class="modal-dialog" style="width: 800px;">
         <div class="modal-content">
             <div class="modal-header">
                 <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                <h4 class="modal-title">课程表</h4>
+                <h4 class="modal-title">课程表 (点击某节课可查看计划)</h4>
             </div>
             <div class="modal-body" id="gUserTable">
                 <table class="table table-striped table-bordered table-hover" id="ldTable" width="100%">
@@ -25,10 +25,12 @@
 
                     </tbody>
                 </table>
+
             </div>
         </div>
     </div>
 </div>
+<jsp:include page="showPlan.jsp"></jsp:include>
 <script type="text/javascript">
     $.ajaxSettings.async = false;
     $.ajaxSettings.cache = false;
@@ -37,20 +39,32 @@
         $.getJSON(fq.contextPath+"/manage/lesson/getLessonDetailJson",{lId:lId},function (data) {
             var tableStr = new StringBuffer();
             for(var i=0 ;i<data.length ; i++){
+                var num = data[i].LESSON_NUM;
                 tableStr.append("<tr>");
-                tableStr.append("<td>").append(data[i].LESSON_NUM).append("</td>");
+                tableStr.append("<td>").append(num).append("</td>");
                 tableStr.append("<td>").append(data[i].LESSON_TIME).append("</td>");
-                tableStr.append("<td style='cursor: pointer'>").append(data[i].WEEK_ONE_LESSON).append("</td>");
-                tableStr.append("<td style='cursor: pointer'>").append(data[i].WEEK_TWO_LESSON).append("</td>");
-                tableStr.append("<td style='cursor: pointer'>").append(data[i].WEEK_THREE_LESSON).append("</td>");
-                tableStr.append("<td style='cursor: pointer'>").append(data[i].WEEK_FOUR_LESSON).append("</td>");
-                tableStr.append("<td style='cursor: pointer'>").append(data[i].WEEK_FIVE_LESSON).append("</td>");
+                var lesssonHref1 = "<a href='#' id='ld_1_"+num+"' data-toggle='popover' data-placement='auto' data-content=''>"+data[i].WEEK_ONE_LESSON+"</a>"
+                var lesssonHref2 = "<a href='#' id='ld_2_"+num+"' data-toggle='popover' data-placement='auto' data-content=''>"+data[i].WEEK_TWO_LESSON+"</a>"
+                var lesssonHref3 = "<a href='#' id='ld_3_"+num+"' data-toggle='popover' data-placement='auto' data-content=''>"+data[i].WEEK_THREE_LESSON+"</a>"
+                var lesssonHref4 = "<a href='#' id='ld_4_"+num+"' data-toggle='popover' data-placement='auto' data-content=''>"+data[i].WEEK_FOUR_LESSON+"</a>"
+                var lesssonHref5 = "<a href='#' id='ld_5_"+num+"' data-toggle='popover' data-placement='auto' data-content=''>"+data[i].WEEK_FIVE_LESSON+"</a>"
+                tableStr.append("<td style='cursor: pointer' onclick='showPlan("+lId+","+num+",1)'>").append(lesssonHref1).append("</td>");
+                tableStr.append("<td style='cursor: pointer' onclick='showPlan("+lId+","+num+",2)'>").append(lesssonHref2).append("</td>");
+                tableStr.append("<td style='cursor: pointer' onclick='showPlan("+lId+","+num+",3)'>").append(lesssonHref3).append("</td>");
+                tableStr.append("<td style='cursor: pointer' onclick='showPlan("+lId+","+num+",4)'>").append(lesssonHref4).append("</td>");
+                tableStr.append("<td style='cursor: pointer' onclick='showPlan("+lId+","+num+",5)'>").append(lesssonHref5).append("</td>");
                 tableStr.append("</tr>");
             }
             $("#ld_body").html(tableStr.toString());
         });
     }
 
-
-
+ function showPlan(lId,num,week){
+     var id = "#ld_"+week+"_"+num;
+     $.getJSON(fq.contextPath+"/manage/lesson/getPlanContent",{lessonId:lId,lessonWeek:week,lessonNum:num},function (data) {
+         $(id).attr("data-content",data);
+         $('tbody a').siblings().popover('hide');
+         $(id).popover('show');
+     });
+ }
 </script>

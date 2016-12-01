@@ -41,6 +41,8 @@ public interface DBConstants {
     String TBL_LESSON_DETAIL_PK = "ID";
     String TBL_LESSON_DETAIL_FPK = "LESSON_ID";
 
+    String TBL_LESSON_PLAN_NAME = "lesson_plans";
+    String TBL_LESSON_PLAN_PK = "ID";
 }
 
 
