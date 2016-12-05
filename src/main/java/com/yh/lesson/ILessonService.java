@@ -44,4 +44,8 @@ public interface ILessonService {
     void deleteLessonPlans(int lessonId);
 
     IACEntry getPlan(int lessonId,int week,int lessonNum);
+
+    int sendPlans(String ids);
+
+    List<IACEntry> getLessonPlans(int lessonId);
 }

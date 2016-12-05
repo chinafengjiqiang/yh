@@ -32,4 +32,9 @@
         AND LESSON_NUM = #{LESSON_NUM}
     </select>
 
+
+    <select id="getLessonPlans" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+        <![CDATA[select * from lesson_plans where LESSON_ID = #{lessonId} and START_DATE <= #{date} and END_DATE >= #{date} ]]>
+    </select>
+
 </mapper>

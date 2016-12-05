@@ -244,15 +244,21 @@ public class LessonService implements ILessonService{
                         List<IACEntry> dList = this.getLessonDetail(lessonId);
                         if(ObjUtils.isNotBlankIACEntryList(dList)){
                             String strHead = AppConstants.PUSH_CMD_LESSON + AppConstants.PUSH_SPLIT;
+                                    strHead += lessonId+AppConstants.PUSH_SPLIT;
                             StringBuilder details = new StringBuilder();
                             for (IACEntry entry : dList) {
                                 int num = entry.getValueAsInt("LESSON_NUM");
                                 String time = entry.getValueAsString("LESSON_TIME");
                                 String one = entry.getValueAsString("WEEK_ONE_LESSON");
+                                if(StringUtils.isBlank(one)) one = " ";
                                 String tow = entry.getValueAsString("WEEK_TWO_LESSON");
+                                if(StringUtils.isBlank(tow)) tow = " ";
                                 String three = entry.getValueAsString("WEEK_THREE_LESSON");
+                                if(StringUtils.isBlank(three)) three = " ";
                                 String four = entry.getValueAsString("WEEK_FOUR_LESSON");
+                                if(StringUtils.isBlank(four)) four = " ";
                                 String five = entry.getValueAsString("WEEK_FIVE_LESSON");
+                                if(StringUtils.isBlank(five)) five = " ";
                                 details.append(num).append(",").append(time).append(",");
                                 details.append(one).append(",").append(tow).append(",");
                                 details.append(three).append(",").append(four).append(",");
@@ -500,5 +506,45 @@ public class LessonService implements ILessonService{
         if(ObjUtils.isNotBlankIACEntryList(retList))
             return retList.get(0);
         return null;
+    }
+
+    @Override
+    public int sendPlans(String ids) {
+        try {
+            String[] idArr = ObjUtils.splitStr(ids);
+            if(idArr != null) {
+                for (String s : idArr) {
+                    if (StringUtils.isNotBlank(s)) {
+                        int lessonId = Integer.parseInt(s);
+                        List<IACEntry> planList = getLessonPlans(lessonId);
+                        if (ObjUtils.isNotBlankIACEntryList(planList)) {
+                            String strHead = AppConstants.PUSH_CMD_PLAN + AppConstants.PUSH_SPLIT;
+                            StringBuilder details = new StringBuilder();
+                            strHead += lessonId+AppConstants.PUSH_SPLIT;
+                            for (IACEntry plan : planList) {
+                                int week = plan.getValueAsInt("LESSON_WEEK");
+                                int num = plan.getValueAsInt("LESSON_NUM");
+                                String name = plan.getValueAsString("LESSON_NAME");
+                                String content = plan.getValueAsString("LESSON_CONTENT");
+                                String startTime = DateUtils.dateTime2String((Date)plan.getValueAsObject("START_DATE"));
+                                String endTime = DateUtils.dateTime2String((Date)plan.getValueAsObject("END_DATE"));
+                            }
+                        }
+                    }
+                }
+            }
+            return 1;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    @Override
+    public List<IACEntry> getLessonPlans(int lessonId) {
+        HashMap<String,Object> params = ObjUtils.getObjMap();
+        params.put("lessonId",lessonId);
+        params.put("date",new Date());
+        return iacDB.getIACEntryList("getLessonPlans",params);
     }
 }

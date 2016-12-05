@@ -156,10 +156,11 @@
                 var url = fq.contextPath+"/manage/lesson/sendLesson";
                 url += "?ids="+ids;
                 $.post(url, function (data) {
+                    deferred.reject();
                     if(data == 1){
-                        Alert("推送完成");
+                        alert("推送完成");
                     }else {
-                        Alert("推送失败");
+                        alert("推送失败");
                     }
                 }, 'json');
             },
