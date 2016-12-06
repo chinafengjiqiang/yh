@@ -1,6 +1,7 @@
 package com.yh.api;
 
 import cn.com.iactive.db.IACEntry;
+import com.yh.lesson.ILessonService;
 import com.yh.user.IUserService;
 import com.yh.utils.NumUtils;
 import com.yh.utils.ObjUtils;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import sun.management.HotspotMemoryMBean;
 
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by FQ.CHINA on 2016/11/15.
@@ -21,6 +23,8 @@ public class ApiService implements IApi{
 
     @Autowired
     private IUserService userService;
+    @Autowired
+    private ILessonService lessonService;
     public int login(HashMap<String,String> params,HashMap<String, Object> retMap) {
         try{
             if (!ParamsCheck.checkLogin(params)) {
@@ -126,9 +130,13 @@ public class ApiService implements IApi{
             int userId = NumUtils.String2Int(params.get("userId"));
             HashMap<String,String> user = new HashMap<String, String>();
             user.put("ID",userId+"");
-            String mphone = params.get("mphone");
+            String mphone = params.get("umphone");
             if(StringUtils.isNotBlank(mphone)){
                 user.put("MPHONE",mphone);
+            }
+            String truename = params.get("utruename");
+            if(StringUtils.isNotBlank(truename)){
+                user.put("TRUENAME",truename);
             }
             boolean ret = userService.updateUser(user);
             if(ret)
@@ -162,5 +170,19 @@ public class ApiService implements IApi{
             e.printStackTrace();
             return ErrorsFactory.Server_Exception;
         }
+    }
+
+
+    @Override
+    public HashMap<String, Object> getLessonPlan(int lessonId, int week, int lessonNum) {
+        IACEntry plan = lessonService.getPlan(lessonId,week,lessonNum);
+        HashMap<String,Object> retMap = new HashMap<>();
+        if (ObjUtils.isNotBlankIACEntry(plan)) {
+            retMap.put("lessonId",lessonId);
+            retMap.put("lessonWeek",week);
+            retMap.put("lessonNum",lessonNum);
+            retMap.put("lessonContent",plan.getValueAsString("LESSON_CONTENT"));
+        }
+        return retMap;
     }
 }

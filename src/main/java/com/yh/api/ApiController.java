@@ -71,4 +71,15 @@ public class ApiController {
         retMap.put("ret",ret);
         return retMap;
     }
+
+    @RequestMapping(value = "getLessonPlan")
+    @ResponseBody
+    public HashMap<String,Object> getLessonPlan(HttpServletRequest request){
+        HashMap<String,String> params = ParamUtils.getDecoderParameters(request);
+        int lessonId = NumUtils.String2Int(params.get("lessonId"));
+        int week = NumUtils.String2Int(params.get("lessonWeek"));
+        int num = NumUtils.String2Int(params.get("lessonNum"));
+        HashMap<String,Object> retMap = apiService.getLessonPlan(lessonId,week,num);
+        return retMap;
+    }
 }

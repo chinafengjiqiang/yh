@@ -30,6 +30,7 @@
         WHERE LESSON_ID = #{LESSON_ID}
         AND LESSON_WEEK = #{LESSON_WEEK}
         AND LESSON_NUM = #{LESSON_NUM}
+        ORDER BY ID DESC
     </select>
 
 

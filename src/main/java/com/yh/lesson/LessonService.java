@@ -518,6 +518,11 @@ public class LessonService implements ILessonService{
                         int lessonId = Integer.parseInt(s);
                         List<IACEntry> planList = getLessonPlans(lessonId);
                         if (ObjUtils.isNotBlankIACEntryList(planList)) {
+                            IACEntry lesson = getLesson(lessonId);
+                            if(ObjUtils.isBlankIACEntry(lesson))
+                                continue;
+                            int deptId = lesson.getValueAsInt("DEPT_ID");
+
                             String strHead = AppConstants.PUSH_CMD_PLAN + AppConstants.PUSH_SPLIT;
                             StringBuilder details = new StringBuilder();
                             strHead += lessonId+AppConstants.PUSH_SPLIT;

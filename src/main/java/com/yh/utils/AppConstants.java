@@ -48,6 +48,8 @@ public interface AppConstants {
      */
     String PUSH_SPLIT = "#@@#";
 
+    String PUSH_PLAN_SPLIT = "#;#";
+    String PUSH_PLAN_INFO_SPLIT = "#,#";
     /**
      * 推送命令号
      */
