@@ -40,7 +40,6 @@ public class ApiController {
         return retMap;
     }
 
-
     @RequestMapping(value = "editUserPass")
     @ResponseBody
     public HashMap<String,Object> editUserPass(HttpServletRequest request){
