@@ -6,7 +6,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                <h4 class="modal-title">课程表 (点击某节课可查看计划)</h4>
+                <h4 class="modal-title">课程表 (点击某节课可查看进度)</h4>
             </div>
             <div class="modal-body" id="gUserTable">
                 <table class="table table-striped table-bordered table-hover" id="ldTable" width="100%">

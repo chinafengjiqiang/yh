@@ -58,4 +58,9 @@ public interface AppConstants {
     int PUSH_CMD_LESSON = 2;//课程表
 
     int PUSH_CMD_PLAN = 3;//教学计划
+
+    /**
+     *
+     */
+    String MANAGE_SESSION_KEY = "managerLoginInfo";
 }

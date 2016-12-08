@@ -3,6 +3,7 @@ package com.yh.api;
 import cn.com.iactive.db.IACEntry;
 import com.yh.lesson.ILessonService;
 import com.yh.user.IUserService;
+import com.yh.utils.DES;
 import com.yh.utils.NumUtils;
 import com.yh.utils.ObjUtils;
 import com.yh.utils.ParamUtils;
@@ -43,6 +44,9 @@ public class ApiService implements IApi{
             }
             String truename = user.getValueAsString("TRUENAME");
             String password = user.getValueAsString("PASSWORD");
+            if(StringUtils.isNotBlank(password)){
+                password = DES.decrypt(password);
+            }
             int type = user.getValueAsInt("USER_TYPE");
             if (!userpass.equals(password)) {//
                 return ErrorsFactory.ERROR_CODE_A;//用户密码错误
@@ -56,7 +60,7 @@ public class ApiService implements IApi{
             String mphone = user.getValueAsString("MPHONE");
             retMap.put("userId",userId);
             retMap.put("username",username);
-            retMap.put("userpass",password);
+            retMap.put("userpass",userpass);
             retMap.put("truename",truename);
             retMap.put("userType",userType);
             retMap.put("userOrg",org);
@@ -114,7 +118,7 @@ public class ApiService implements IApi{
             }
             params.clear();
             params.put("ID",userId+"");
-            params.put("PASSWORD",newPass);
+            params.put("PASSWORD",DES.encrypt(newPass));
             boolean ret = userService.updateUser(params);
             if(ret)
                 return ErrorsFactory.Request_Success;

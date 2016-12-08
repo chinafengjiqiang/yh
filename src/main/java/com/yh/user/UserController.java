@@ -85,7 +85,7 @@ public class UserController {
         try {
             HashMap<String,String> user = ParamUtils.getParameters(request);
             user.put("USER_TYPE", AppConstants.USER_TYPE_TEARCH+"");
-            user.put("PASSWORD", TEARCH_PASS);
+            user.put("PASSWORD", DES.encrypt(TEARCH_PASS));
             if(StringUtils.isBlank(user.get("ID"))){
                 boolean isExist = userService.isUserExist(user.get("USERNAME"));
                 if(isExist){
@@ -163,7 +163,7 @@ public class UserController {
                 user.put("ROLE",role);
                 user.put("MPHONE",list.get(i).get(3));
                 user.put("USER_TYPE", AppConstants.USER_TYPE_TEARCH+"");
-                user.put("PASSWORD", TEARCH_PASS);
+                user.put("PASSWORD", DES.encrypt(TEARCH_PASS));
                 user.put("PK_ORG",orgId);
                 user.put("PK_DEPT",deptId);
                 tList.add(user);

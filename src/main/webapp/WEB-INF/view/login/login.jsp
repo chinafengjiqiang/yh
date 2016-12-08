@@ -29,7 +29,7 @@
         <div class="login-wrap">
             <label style="color: red;display: none;">错误信息</label>
             <input id="username" name="username" type="text" class="form-control" placeholder="用户名" autofocus>
-            <input id="password" name="password" type="password" class="form-control" value="" placeholder="密码">
+            <input id="password" name="userpass" type="password" class="form-control" value="" placeholder="密码">
             <label class="checkbox">
                 <input id="rembstatus_V" type="checkbox" />
                 <input id="rembstatus" name="rembstatus" type="hidden" value="1"/>
@@ -61,13 +61,16 @@
           if(validate.form()){
               var url = fq.contextPath + "/login/verify";
               $.post(url,fq.serializeObject($("#loginForm")),function (result) {
-                  if (result == 200) {
-                      top.location.href = fq.contextPath + "/login/main";
-                  }else if(result == 400){
+                  if (result == 0) {
+                      top.location.href = fq.contextPath + "/manage/main";
+                  }else if(result == 4002){
                       alert("用户不存在");
-                  }else if(result == 401){
+                  }else if(result == 4003){
                       alert("密码错误");
-                  }else {
+                  }else if(result == 4004){
+                      alert("无权登录");
+                  }
+                  else {
                       alert("登录失败");
                   }
               });

@@ -18,9 +18,9 @@
                                     class="btn btn-success">导入</button>
                             <button type="button" class="btn btn-danger" onclick="delLesson()">批量删除</button>
                             <button type="button" class="btn btn-success" onclick="sendLesson()">课程表推送</button>
-                            <button href="#planModal" data-toggle="modal" type="button" id="import_plan" onclick="toImportPlan()"
-                                    class="btn btn-success">导入计划</button>
-                            <button type="button" class="btn btn-danger" onclick="delLessonPlan()">删除计划</button>
+                            <button href="#planModal" data-toggle="modal" type="button" id="import_plan"
+                                    class="btn btn-success">导入进度</button>
+                            <button type="button" class="btn btn-danger" onclick="delLessonPlan()">删除进度</button>
                         </div>
                         <div class="bread-crumb pull-right">
                             <form action="" class="">
@@ -109,6 +109,21 @@
             $("#importForm :input").val("");
             $("#PK_DEPT_IMP").val(deptId);
         });
+
+        $("#import_plan").click(function () {
+            var selData = table.rows('.selected').data();
+            if(selData.length <= 0){
+                Alert("请选择课程表！");
+                return false;
+            }
+            if(selData.length > 1){
+                Alert("只能选择一个课程表！");
+                return false;
+            }
+            var id = selData[0].ID;
+            $("#planForm :input").val("");
+            $("#LESSON_ID").val(id);
+        });
     });
 
 
@@ -171,22 +186,7 @@
     }
     
     function toImportPlan() {
-        var selData = table.rows('.selected').data();
-        if(selData.length <= 0){
-            Alert("请选择课程表！");
-            return false;
-        }
-        if(selData.length > 1){
-            Alert("只能选择一个课程表！");
-            return false;
-        }
-        var id = selData[0].ID;
-        /*var url = fq.contextPath+"/manage/lesson/gotoImportPlan?lessonId="+id;
-        $("#planModal").modal({
-            remote: url,
-        });*/
-        $("#planForm :input").val("");
-        $("#LESSON_ID").val(id);
+
     }
 
     $("#planForm").validate({
@@ -213,7 +213,7 @@
         }
         var deferred = $.Deferred();
         Confirm({
-            msg: '确定要删除此课程表中的计划？',
+            msg: '确定要删除此课程表中的进度？',
             onOk: function(){
                 var ids = [];
                 $.each(selData,function (i,obj) {

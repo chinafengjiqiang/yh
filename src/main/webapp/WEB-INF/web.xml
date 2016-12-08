@@ -90,6 +90,21 @@
 		<filter-name>monitoring</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
+
+	<!-- 登录认证 -->
+	<filter>
+		<filter-name>SecurityServlet</filter-name>
+		<filter-class>com.yh.filter.ManageFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>SecurityServlet</filter-name>
+		<url-pattern>*.jsp</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>SecurityServlet</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
 	<welcome-file-list>
 		<welcome-file>/index.jsp</welcome-file>
 	</welcome-file-list>

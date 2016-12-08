@@ -15,7 +15,7 @@
 				<li><a href="#" class="has_sub" onclick="menu('${contextPath}/manage/msg')"><i
 						class="icon-mobile-phone"></i>教学通知</a></li>
 				<li><a href="#" class="has_sub" onclick="menu('${contextPath}/manage/lesson')"><i
-						class="icon-book"></i>课程及计划</a></li>
+						class="icon-book"></i>课程及进度</a></li>
 			</ul>
 		</div>
 <script>

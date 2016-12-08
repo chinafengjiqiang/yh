@@ -7,7 +7,7 @@
 
             <div class="modal-header">
                 <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                <h4 class="modal-title">导入计划</h4>
+                <h4 class="modal-title">导入进度</h4>
             </div>
             <div class="modal-body">
 
