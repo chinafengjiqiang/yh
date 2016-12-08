@@ -27,7 +27,6 @@ public class LoginController {
         return new ModelAndView("login/login");
     }
 
-
     @RequestMapping(value = "verify")
     @ResponseBody
     public int verify(HttpServletRequest request){
