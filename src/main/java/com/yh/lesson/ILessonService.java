@@ -48,4 +48,6 @@ public interface ILessonService {
     int sendPlans(String ids);
 
     List<IACEntry> getLessonPlans(int lessonId);
+
+    HashMap<String,Object> getPreLessonList(DataModel dataModel);
 }

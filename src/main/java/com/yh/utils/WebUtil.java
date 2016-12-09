@@ -47,6 +47,10 @@ public class WebUtil {
     public static LoginInfo getManagerLoginInfo(HttpServletRequest request){
         return (LoginInfo)request.getSession().getAttribute(AppConstants.MANAGE_SESSION_KEY);
     }
+
+    public static void setManagerLoginInfo(HttpServletRequest request,LoginInfo loginInfo){
+        request.getSession().setAttribute(AppConstants.MANAGE_SESSION_KEY,loginInfo);
+    }
     
     
     /**
@@ -67,7 +71,7 @@ public class WebUtil {
     public static void removeManagerLoginInfo(HttpServletRequest request){
         //request.getSession().removeAttribute("managerLoginInfo");
         HttpSession thisSession = request.getSession();
-        thisSession.removeAttribute("managerLoginInfo");
+        thisSession.removeAttribute(AppConstants.MANAGE_SESSION_KEY);
         if(thisSession != null)
             thisSession.invalidate();//是该session失效
     }

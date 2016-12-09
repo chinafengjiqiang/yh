@@ -552,4 +552,13 @@ public class LessonService implements ILessonService{
         params.put("date",new Date());
         return iacDB.getIACEntryList("getLessonPlans",params);
     }
+
+    @Override
+    public HashMap<String, Object> getPreLessonList(DataModel dataModel) {
+        HashMap<String,Object> params = ListSearchUtil.getSearchMap(dataModel);
+        int deptId = dataModel.getValueAsInt("deptId");
+        if(deptId >= 0)
+            params.put("DEPT_ID",deptId);
+        return  iacDB.getDataTables("getPreLessonList",dataModel.getDataTablesModel(),params);
+    }
 }

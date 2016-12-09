@@ -38,4 +38,14 @@
         <![CDATA[select * from lesson_plans where LESSON_ID = #{lessonId} and START_DATE <= #{date} and END_DATE >= #{date} ]]>
     </select>
 
+
+    <select id="getPreLessonList" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+        select * from tbl_pre_lesson WHERE (1=1)
+        <if test="DEPT_ID != null">
+            AND DEPT_ID = #{DEPT_ID}
+        </if>
+        <if test="SEARCH!=null">
+            AND NAME LIKE #{SEARCH}
+        </if>
+    </select>
 </mapper>

@@ -77,6 +77,8 @@
             url = fq.contextPath+"/manage/user/goTearchList?deptId="+id+"&orgId="+pid;
         }else if(config == "lesson_dept"){//课程表
             url = fq.contextPath+"/manage/lesson/goLessonList?deptId="+id;
+        }else if(config == "pre_lesson_dept"){//备课表
+            url = fq.contextPath+"/manage/lesson/goPreLessonList?deptId="+id;
         }
         return  url;
     }

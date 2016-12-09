@@ -2,6 +2,7 @@ package com.yh.user;
 
 import cn.com.iactive.db.IACDB;
 import cn.com.iactive.db.IACEntry;
+import com.yh.api.IApi;
 import com.yh.dic.IDicService;
 import com.yh.model.DataModel;
 import com.yh.utils.*;
@@ -31,6 +32,9 @@ public class UserService implements IUserService{
 
     @Autowired
     private IDicService dicService;
+
+    @Autowired
+    private IApi apiService;
 
 
     public HashMap<String, Object> getUserList(DataModel dataModel) {
@@ -254,5 +258,13 @@ public class UserService implements IUserService{
             }
         }
         return clientList;
+    }
+
+    @Override
+    public int editUserPass(int userId, String pass) {
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("userId",userId+"");
+        params.put("userpass",pass);
+        return apiService.editUserPass(params);
     }
 }

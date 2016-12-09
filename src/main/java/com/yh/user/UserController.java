@@ -2,6 +2,7 @@ package com.yh.user;
 
 import cn.com.iactive.db.IACEntry;
 import com.yh.model.DataModel;
+import com.yh.model.LoginInfo;
 import com.yh.model.RetVO;
 import com.yh.utils.*;
 import org.apache.commons.lang.StringUtils;
@@ -210,6 +211,19 @@ public class UserController {
     public List<IACEntry> getDeptUserJson(HttpServletRequest request){
         return userService.getDeptUser(ParamUtils.getIntParameter(request,"orgId",0),
                 ParamUtils.getIntParameter(request,"deptId",0),ParamUtils.getIntParameter(request,"type",0));
+    }
+
+    @RequestMapping(value = "editPass")
+    public String editPass(){
+        return "user/editPass";
+    }
+
+    @RequestMapping(value = "doEditPass")
+    @ResponseBody
+    public int doEditPass(HttpServletRequest request){
+        String pass = ParamUtils.getParameter(request,"NEW_PASS","");
+        LoginInfo loginInfo = WebUtil.getManagerLoginInfo(request);
+        return userService.editUserPass(loginInfo.getUserId(),pass);
     }
 }
 

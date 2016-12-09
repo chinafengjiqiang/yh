@@ -8,12 +8,12 @@
             <div class="row">
                 <div class="col-md-12">
                     <jsp:include page="../dept/deptTree.jsp">
-                        <jsp:param name="config" value="lesson_dept" />
+                        <jsp:param name="config" value="pre_lesson_dept" />
                     </jsp:include>
                     <%--mian--%>
                     <div id="mainbar-list">
                         <!--异步引入页面-->
-                        <jsp:include page="${contextPath}/manage/lesson/goLessonList"></jsp:include>
+                        <jsp:include page="${contextPath}/manage/lesson/goPreLessonList"></jsp:include>
                     </div>
                 </div>
             </div>
@@ -22,5 +22,3 @@
     <!-- 弹出窗口的页面 -->
 </div>
 <jsp:include page="edit.jsp"></jsp:include>
-<jsp:include page="showLessonDetail.jsp"></jsp:include>
-<jsp:include page="importPlan.jsp"></jsp:include>

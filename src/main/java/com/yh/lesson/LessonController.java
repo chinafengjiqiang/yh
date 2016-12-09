@@ -212,4 +212,21 @@ public class LessonController {
             return plan.getValueAsString("LESSON_CONTENT");
         return SpringUtil.getMessage("lesson.plan.noexist");
     }
+
+    @RequestMapping(value = "preLesson")
+    public String preLesson(){
+        return "lesson/prelessonMainList";
+    }
+
+    @RequestMapping(value = "goPreLessonList")
+    public String goPreLessonList(HttpServletRequest request){
+        request.setAttribute("deptId", ParamUtils.getIntParameter(request,"deptId",-1));
+        return "lesson/prelessonList";
+    }
+
+    @RequestMapping(value = "getPreLessonList")
+    @ResponseBody
+    public HashMap<String,Object> getPreLessonList(DataModel dataModel) {
+        return lessonService.getPreLessonList(dataModel);
+    }
 }

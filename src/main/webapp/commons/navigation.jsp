@@ -16,6 +16,10 @@
 						class="icon-mobile-phone"></i>教学通知</a></li>
 				<li><a href="#" class="has_sub" onclick="menu('${contextPath}/manage/lesson')"><i
 						class="icon-book"></i>课程及进度</a></li>
+				<li><a href="#" class="has_sub" onclick="menu('${contextPath}/manage/lesson/preLesson')"><i
+						class="icon-building"></i>备课管理</a></li>
+				<li><a href="#" class="has_sub" onclick="menu('${contextPath}/manage/user/editPass')"><i
+						class="icon-edit"></i>密码修改</a></li>
 			</ul>
 		</div>
 <script>

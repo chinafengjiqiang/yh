@@ -48,4 +48,6 @@ public interface IUserService {
     List<IACEntry> getDeptRoleUser(int deptId,int role);
 
     List<String> getDeptUserClientId(int deptId);
+
+    int editUserPass(int userId,String pass);
 }
