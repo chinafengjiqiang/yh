@@ -21,4 +21,5 @@
     </div>
     <!-- 弹出窗口的页面 -->
 </div>
-<jsp:include page="edit.jsp"></jsp:include>
+<jsp:include page="importPreLesson.jsp"></jsp:include>
+<jsp:include page="showPreLesson.jsp"></jsp:include>

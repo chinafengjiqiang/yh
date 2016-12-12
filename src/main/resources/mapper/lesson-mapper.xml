@@ -48,4 +48,21 @@
             AND NAME LIKE #{SEARCH}
         </if>
     </select>
+
+    <select id="getDeptPreLesson" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+        select * from tbl_pre_lesson
+        WHERE DEPT_ID = #{DEPT_ID}
+        <![CDATA[ AND END_DATE >= #{START_DATE} AND END_DATE <= #{END_DATE}]]>
+    </select>
+
+    <select id="getDeptValidPreLesson" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+        select * from tbl_pre_lesson
+        WHERE DEPT_ID = #{DEPT_ID}
+        <![CDATA[ AND END_DATE >= #{NOW_DATE}]]>
+    </select>
+
+    <select id="getPreLessonDetail" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+        select * from tbl_pre_lesson_detail WHERE PRE_ID = #{PRE_ID}
+    </select>
+
 </mapper>

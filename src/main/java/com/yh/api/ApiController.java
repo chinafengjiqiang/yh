@@ -81,4 +81,12 @@ public class ApiController {
         HashMap<String,Object> retMap = apiService.getLessonPlan(lessonId,week,num);
         return retMap;
     }
+
+    @RequestMapping(value = "getPreLesson")
+    @ResponseBody
+    public HashMap<String,Object> getPreLesson(HttpServletRequest request){
+        int userId = ParamUtils.getIntParameter(request,"userId",0);
+        HashMap<String,Object> retMap = apiService.getPreLesson(userId);
+        return retMap;
+    }
 }

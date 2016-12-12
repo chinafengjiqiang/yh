@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sun.management.HotspotMemoryMBean;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -187,6 +188,45 @@ public class ApiService implements IApi{
             retMap.put("lessonNum",lessonNum);
             retMap.put("lessonContent",plan.getValueAsString("LESSON_CONTENT"));
         }
+        return retMap;
+    }
+
+    @Override
+    public HashMap<String, Object> getPreLesson(int userId) {
+        HashMap<String, Object> retMap = new HashMap<String, Object>();
+        List<HashMap<String, Object>> retList = new ArrayList<HashMap<String, Object>>();
+       try {
+           IACEntry user = userService.getUserById(userId);
+           if(user != null){
+               int deptId = user.getValueAsInt("PK_DEPT");
+               List<IACEntry> plList = lessonService.getDeptValidPreLesson(deptId);
+               if(ObjUtils.isNotBlankIACEntryList(plList)){
+                  IACEntry plesson = plList.get(0);
+                   String name = plesson.getValueAsString("NAME");
+                   int id = plesson.getValueAsInt("ID");
+                   List<IACEntry> pldList = lessonService.getPreLessonDetails(id);
+                   retMap.put("name",name);
+                   retMap.put("id",id);
+                   if(ObjUtils.isNotBlankIACEntryList(pldList)){
+                       HashMap<String, Object> pldMap = null;
+                       for (IACEntry pld : pldList) {
+                           pldMap = new HashMap<String,Object> ();
+                           pldMap.put("plnum",pld.getValueAsInt("PRE_NUM"));
+                           pldMap.put("pltime",pld.getValueAsString("PRE_TIME"));
+                           pldMap.put("plone",pld.getValueAsString("WEEK_ONE_PRE"));
+                           pldMap.put("pltwo",pld.getValueAsString("WEEK_TWO_PRE"));
+                           pldMap.put("plthree",pld.getValueAsString("WEEK_THREE_PRE"));
+                           pldMap.put("plfour",pld.getValueAsString("WEEK_FOUR_PRE"));
+                           pldMap.put("plfive",pld.getValueAsString("WEEK_FIVE_PRE"));
+                           retList.add(pldMap);
+                       }
+                   }
+                   retMap.put("pldList",retList);
+               }
+           }
+       } catch (Exception e) {
+           e.printStackTrace();
+       }
         return retMap;
     }
 }

@@ -184,10 +184,7 @@
             }
         })
     }
-    
-    function toImportPlan() {
 
-    }
 
     $("#planForm").validate({
         rules : {

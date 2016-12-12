@@ -20,4 +20,6 @@ public interface IApi {
     int getUserInfo(HashMap<String,String> params,HashMap<String, Object> retMap);
 
     HashMap<String,Object> getLessonPlan(int lessonId, int week, int lessonNum);
+
+    HashMap<String,Object> getPreLesson(int userId);
 }

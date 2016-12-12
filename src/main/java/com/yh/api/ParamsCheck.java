@@ -24,6 +24,7 @@ public class ParamsCheck {
     //获取用户信息
     private static final String[] GET_USER_INFO = {"userId"};
 
+
     public static boolean checkLogin(HashMap<String, String> params){
         if (params == null || params.size() == 0)
             return false;
@@ -71,4 +72,5 @@ public class ParamsCheck {
         }
         return true;
     }
+
 }

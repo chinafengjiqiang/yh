@@ -50,4 +50,22 @@ public interface ILessonService {
     List<IACEntry> getLessonPlans(int lessonId);
 
     HashMap<String,Object> getPreLessonList(DataModel dataModel);
+
+    public HSSFWorkbook exportPreTemplate();
+
+    long addPreLesson(HashMap<String,Object> prelessson);
+
+    boolean addPreLessonDetail(HashMap<String, Object> detail);
+
+    boolean deleteDeptPreLesson(int deptId,String startTime,String endTime);
+
+    RetVO delpre(String ids);
+
+    List<IACEntry> getDeptPreLesson(int deptId,String startTime,String endTime);
+
+    List<IACEntry> getPreLessonDetails(int preId);
+
+    List<HashMap<String,Object>> getPreLessonTable(int preId);
+
+    List<IACEntry> getDeptValidPreLesson(int deptId);
 }

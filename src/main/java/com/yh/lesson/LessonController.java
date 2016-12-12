@@ -229,4 +229,100 @@ public class LessonController {
     public HashMap<String,Object> getPreLessonList(DataModel dataModel) {
         return lessonService.getPreLessonList(dataModel);
     }
+
+    @RequestMapping(value = "exportPreLessonTmp")
+    public void exportPreLessonTmp(HttpServletResponse response){
+        HSSFWorkbook workbook = lessonService.exportPreTemplate();
+        try {
+            String mimetype = "application/x-msdownload";
+            response.setContentType(mimetype);
+            String downFileName = "prelesson.xls";
+            String inlineType = "attachment"; // 是否内联附件
+            response.setHeader("Content-Disposition", inlineType
+                    + ";filename=\"" + downFileName + "\"");
+            OutputStream out=response.getOutputStream();
+            workbook.write(out);
+            out.flush();
+            out.close();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
+    @RequestMapping(value = "importPreLesson")
+    @ResponseBody
+    public RetVO importPreLesson(@RequestParam MultipartFile file, HttpServletRequest request){
+        RetVO ret = new RetVO();
+        try {
+            String extName = FileUtils.getFileExt(file.getOriginalFilename());
+            if (!"xls".equals(extName)) {//判断文件格式
+                ret.setSuccess(false);
+                ret.setMsg(SpringUtil.getMessage("file.format.error"));
+                return ret;
+            }
+            String deptId = request.getParameter("PK_DEPT");
+            String startTime = request.getParameter("startTime");
+            String endTime = request.getParameter("endTime");
+            ImportExecl poi = new ImportExecl();
+            List<List<String>> list = poi.read(file.getInputStream(), true);
+            if (list != null && list.size() > 0) {
+                lessonService.deleteDeptPreLesson(NumUtils.String2Int(deptId),startTime,endTime);
+
+                String name;
+                List<String> titleList = list.get(0);
+                name = titleList.get(0);
+                HashMap<String, Object> prelesson = new HashMap<String, Object>();
+                prelesson.put("NAME", name);
+                prelesson.put("START_DATE",startTime);
+                prelesson.put("END_DATE", endTime);
+                prelesson.put("DEPT_ID", deptId);
+                // 添加
+                long prelessonId = lessonService.addPreLesson(prelesson);
+
+                if (prelessonId > 0) {
+                    HashMap<String, Object> detail = null;
+                    for (int i = 2; i < list.size(); i++) {
+                        if (i != 7) {// 第八行为上下午分割线
+                            List<String> infoList = list.get(i);
+                            if (infoList != null && infoList.size() == 7) {
+                                detail = new HashMap<String, Object>();
+                                detail.put("PRE_ID", prelessonId);
+                                detail.put("PRE_NUM", infoList.get(0));
+                                detail.put("PRE_TIME", infoList.get(1));
+                                detail.put("WEEK_ONE_PRE", infoList.get(2));
+                                detail.put("WEEK_TWO_PRE", infoList.get(3));
+                                detail.put("WEEK_THREE_PRE", infoList.get(4));
+                                detail.put("WEEK_FOUR_PRE", infoList.get(5));
+                                detail.put("WEEK_FIVE_PRE", infoList.get(6));
+                                lessonService.addPreLessonDetail(detail);
+                            }
+                        }
+                    }
+
+                }
+            }
+            ret.setSuccess(true);
+        }catch (Exception e){
+            e.printStackTrace();
+            ret.setSuccess(false);
+        }
+        return ret;
+    }
+
+
+    @RequestMapping(value = "delpre")
+    @ResponseBody
+    public RetVO delpre(DelModel del){
+        String ids = del.getIds();
+        return lessonService.delpre(ids);
+    }
+
+    @RequestMapping(value = "getPreLessonDetailJson")
+    @ResponseBody
+    public List<HashMap<String,Object>> getPreLessonDetailJson(HttpServletRequest request){
+        int preId = ParamUtils.getIntParameter(request,"preId",0);
+        return lessonService.getPreLessonTable(preId);
+    }
 }

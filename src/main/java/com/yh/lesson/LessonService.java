@@ -26,7 +26,9 @@ import java.util.*;
 @Service
 public class LessonService implements ILessonService{
     private final static String[] LESSON_NUM_TIME = {"7:30-8:10","8:20-9:00","9:10-9:50","10:30-11:10","11:20-12:00","15:00-15:40","15:50-16:30","16:40-17:20"};
+    private final static String[] PRELESSON_NUM_TIME = {"7:30-8:10","8:20-9:00","9:10-9:50","10:30-11:10","11:20-12:00","14:30-15:10","15:20-16:00","16:10-16:50","17:00-17:40"};
     private final static int LESSON_NUM = 8;
+    private final static int PRELESSON_NUM = 9;
     @Autowired
     private IACDB<HashMap<String,Object>> iacDB;
     @Autowired
@@ -188,7 +190,7 @@ public class LessonService implements ILessonService{
     public List<HashMap<String, Object>> getLessonDetails(int lessonId) {
         HashMap<String,Object> params = ObjUtils.getObjMap();
         params.put("LESSON_ID",lessonId);
-        return iacDB.getList("getLessonDetail",lessonId);
+        return iacDB.getList("getLessonDetail",params);
     }
 
     HashMap<Integer,IACEntry> ldMap = null;
@@ -560,5 +562,206 @@ public class LessonService implements ILessonService{
         if(deptId >= 0)
             params.put("DEPT_ID",deptId);
         return  iacDB.getDataTables("getPreLessonList",dataModel.getDataTablesModel(),params);
+    }
+
+    public HSSFWorkbook exportPreTemplate() {
+        HSSFWorkbook wb = new HSSFWorkbook();
+        HSSFSheet sheet = wb.createSheet("new sheet");
+        sheet.autoSizeColumn(1, true);
+
+        //合并单元格
+        CellRangeAddress cra=new CellRangeAddress(0, 0, 0, 6);
+        sheet.addMergedRegion(cra);
+
+        CellRangeAddress cra_row_8=new CellRangeAddress(7, 7, 0, 6);
+        sheet.addMergedRegion(cra_row_8);
+
+        HSSFRow row = sheet.createRow(0);
+
+        HSSFCellStyle row_0_style = wb.createCellStyle();
+        row_0_style.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+        HSSFFont row_0_font = wb.createFont();
+        row_0_font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+        row_0_font.setFontHeightInPoints((short)14);
+        row_0_style.setFont(row_0_font);
+
+        HSSFCell cell = row.createCell(0);
+        cell.setCellStyle(row_0_style);
+        cell.setCellValue(SpringUtil.getMessage("prelesson.title"));
+
+        HSSFRow row1 = sheet.createRow(1);
+        HSSFCell cell0 = row1.createCell(0);
+        HSSFCell cell1 = row1.createCell(1);
+        HSSFCell cell2 = row1.createCell(2);
+        HSSFCell cell3 = row1.createCell(3);
+        HSSFCell cell4 = row1.createCell(4);
+        HSSFCell cell5 = row1.createCell(5);
+        HSSFCell cell6 = row1.createCell(6);
+
+        cell0.setCellStyle(row_0_style);
+        cell1.setCellStyle(row_0_style);
+        cell2.setCellStyle(row_0_style);
+        cell3.setCellStyle(row_0_style);
+        cell4.setCellStyle(row_0_style);
+        cell5.setCellStyle(row_0_style);
+        cell6.setCellStyle(row_0_style);
+
+        String text0 = SpringUtil.getMessage("lesson.num");
+        String text1= SpringUtil.getMessage("lesson.time");
+        String text2 = SpringUtil.getMessage("lesson.one");
+        String text3 = SpringUtil.getMessage("lesson.two");
+        String text4 = SpringUtil.getMessage("lesson.three");
+        String text5 = SpringUtil.getMessage("lesson.four");
+        String text6 = SpringUtil.getMessage("lesson.five");
+
+        cell0.setCellValue(text0);
+        cell1.setCellValue(text1);
+        cell2.setCellValue(text2);
+        cell3.setCellValue(text3);
+        cell4.setCellValue(text4);
+        cell5.setCellValue(text5);
+        cell6.setCellValue(text6);
+
+        sheet.setColumnWidth(0, text0.getBytes().length*2*256);
+        sheet.setColumnWidth(1, text1.getBytes().length*2*256);
+        sheet.setColumnWidth(2, text2.getBytes().length*2*256);
+        sheet.setColumnWidth(3, text3.getBytes().length*2*256);
+        sheet.setColumnWidth(4, text3.getBytes().length*2*256);
+        sheet.setColumnWidth(5, text3.getBytes().length*2*256);
+        sheet.setColumnWidth(6, text3.getBytes().length*2*256);
+
+        HSSFCellStyle style = wb.createCellStyle();
+        style.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+        HSSFFont font = wb.createFont();
+        //font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+        font.setFontHeightInPoints((short)12);
+        style.setFont(font);
+
+        int num = 0;
+        for(int row_num = 2;row_num < 12;row_num++){
+            HSSFRow rown = sheet.createRow(row_num);
+            if(row_num != 7){
+                HSSFCell rown_0 = rown.createCell(0);
+                HSSFCell rown_1 = rown.createCell(1);
+                rown_0.setCellStyle(style);
+                rown_1.setCellStyle(style);
+                rown_0.setCellValue(num+1);
+                rown_1.setCellValue(PRELESSON_NUM_TIME[num]);
+                num++;
+            }
+        }
+
+        return wb;
+    }
+
+    @Override
+    public long addPreLesson(HashMap<String, Object> prelessson) {
+        return iacDB.insertDynamicRInt(DBConstants.TBL_PRELESSON_NAME,prelessson);
+    }
+
+    @Override
+    public boolean addPreLessonDetail(HashMap<String, Object> detail) {
+        return iacDB.insertDynamic(DBConstants.TBL_PRELESSON_DETAIL_NAME,detail);
+    }
+
+    @Override
+    public boolean deleteDeptPreLesson(int deptId, String startTime, String endTime) {
+        try {
+            List<IACEntry> retList = getDeptPreLesson(deptId,startTime,endTime);
+            if(ObjUtils.isNotBlankIACEntryList(retList)){
+                for (IACEntry pre : retList) {
+                    if(pre != null){
+                        delpre(pre.getValueAsInt("ID")+"");
+                    }
+                }
+            }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
+    @Override
+    public List<IACEntry> getDeptPreLesson(int deptId, String startTime, String endTime) {
+        HashMap<String,Object> params = new HashMap<String, Object>();
+        params.put("DEPT_ID",deptId);
+        params.put("START_DATE",startTime);
+        params.put("END_DATE",endTime);
+        return iacDB.getIACEntryList("getDeptPreLesson", params);
+    }
+
+    @Override
+    public RetVO delpre(String ids) {
+        RetVO ret = new RetVO();
+        try {
+            if(StringUtils.isNotBlank(ids)){
+                List<String> idList = Arrays.asList(ids.split(","));
+                iacDB.deleteBatchDynamic(DBConstants.TBL_PRELESSON_DETAIL_NAME,
+                        DBConstants.TBL_PRELESSON_DETAIL_FPK,idList);
+                iacDB.deleteBatchDynamic(DBConstants.TBL_PRELESSON_NAME,
+                        DBConstants.TBL_PRELESSON_PK,idList);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            ret.setSuccess(false);
+        }
+        return ret;
+    }
+
+    @Override
+    public List<IACEntry> getPreLessonDetails(int preId) {
+        HashMap<String,Object> params = ObjUtils.getObjMap();
+        params.put("PRE_ID",preId);
+        return iacDB.getIACEntryList("getPreLessonDetail",params);
+    }
+
+    HashMap<Integer, IACEntry> pldMap = null;
+    @Override
+    public List<HashMap<String, Object>> getPreLessonTable(int preId) {
+        List<IACEntry> ldList = getPreLessonDetails(preId);
+        List<HashMap<String,Object>> retList = new ArrayList<HashMap<String, Object>>(PRELESSON_NUM);
+        initPreLessonDetail(ldList);
+        HashMap<String,Object> pldtMap = null;
+        for(int i = 1;i<=PRELESSON_NUM;i++){
+            pldtMap = new HashMap<String, Object>();
+            IACEntry ld = pldMap.get(i);
+            pldtMap.put("PRE_ID",preId);
+            pldtMap.put("PRE_NUM",i);
+            if(ld != null){
+                pldtMap.put("PRE_TIME",ld.getValueAsString("PRE_TIME"));
+                pldtMap.put("WEEK_ONE_PRE",ld.getValueAsString("WEEK_ONE_PRE"));
+                pldtMap.put("WEEK_TWO_PRE",ld.getValueAsString("WEEK_TWO_PRE"));
+                pldtMap.put("WEEK_THREE_PRE",ld.getValueAsString("WEEK_THREE_PRE"));
+                pldtMap.put("WEEK_FOUR_PRE",ld.getValueAsString("WEEK_FOUR_PRE"));
+                pldtMap.put("WEEK_FIVE_PRE",ld.getValueAsString("WEEK_FIVE_PRE"));
+            }
+            retList.add(pldtMap);
+        }
+        return retList;
+    }
+
+    private void initPreLessonDetail(List<IACEntry> ldList){
+        if (pldMap != null) {
+            pldMap.clear();
+        }else {
+            pldMap = new HashMap<Integer, IACEntry>();
+        }
+        if (ObjUtils.isNotBlankIACEntryList(ldList)) {
+            for(IACEntry ld : ldList){
+                int num = ld.getValueAsInt("PRE_NUM");
+                pldMap.put(num,ld);
+            }
+
+        }
+    }
+
+    @Override
+    public List<IACEntry> getDeptValidPreLesson(int deptId) {
+        HashMap<String,Object> params = new HashMap<String,Object>();
+        params.put("DEPT_ID",deptId);
+        params.put("NOW_DATE",new Date());
+        return iacDB.getIACEntryList("getDeptValidPreLesson",params);
     }
 }

@@ -68,19 +68,6 @@
     });
 
 
-    formValidate = $("#mForm").validate({
-        /*rules : {
-         NAME : "required",
-
-         },
-         messages : {
-         NAME : "请输入分组名称",
-         },*/
-        submitHandler:function(form){
-            submitForm('mForm','manage/lesson/saveLesson',table,$('#editModal'));
-        }
-    });
-
 
 
     $(document).ready(function(){
@@ -98,20 +85,6 @@
             $("#PK_DEPT_IMP").val(deptId);
         });
 
-        $("#import_plan").click(function () {
-            var selData = table.rows('.selected').data();
-            if(selData.length <= 0){
-                Alert("请选择课程表！");
-                return false;
-            }
-            if(selData.length > 1){
-                Alert("只能选择一个课程表！");
-                return false;
-            }
-            var id = selData[0].ID;
-            $("#planForm :input").val("");
-            $("#LESSON_ID").val(id);
-        });
     });
 
 
@@ -121,106 +94,29 @@
         table = DataTablePack.serverTable($('#table'),'manage/lesson/getPreLessonList',req,columns,0);
     }
     function exportTemplate(){
-        window.open(fq.contextPath+"/manage/lesson/exportLessonTmp");
+        window.open(fq.contextPath+"/manage/lesson/exportPreLessonTmp");
     }
 
 
     $("#importForm").validate({
         rules : {
             file : "required",
+            startTime:"required",
+            endTime:"required"
         },
         messages : {
             file : "请选择要导入的文件",
+            startTime:"请输入开始时间",
+            endTime:"请输入结束时间"
         },
         submitHandler:function(form){
-            ajaxSubmit('importForm','manage/lesson/importLesson',table,$('#importModal'));
+            ajaxSubmit('importForm','manage/lesson/importPreLesson',table,$('#importModal'));
         }
     });
 
     function delLesson(){
-        var url = fq.contextPath+"/manage/lesson/del";
+        var url = fq.contextPath+"/manage/lesson/delpre";
         delBatchWUrl(table,"ID",url);
     }
 
-    function sendLesson() {
-        var selData = table.rows('.selected').data();
-        if(selData.length <= 0){
-            Alert("请选择要推送的课程表！");
-            return false;
-        }
-        var deferred = $.Deferred();
-        Confirm({
-            msg: '确定要对课程表进行推送？',
-            onOk: function(){
-                var ids = [];
-                $.each(selData,function (i,obj) {
-                    ids.push(obj["ID"])
-                });
-                var url = fq.contextPath+"/manage/lesson/sendLesson";
-                url += "?ids="+ids;
-                $.post(url, function (data) {
-                    deferred.reject();
-                    if(data == 1){
-                        alert("推送完成");
-                    }else {
-                        alert("推送失败");
-                    }
-                }, 'json');
-            },
-            onCancel: function(){
-                deferred.reject();
-            }
-        })
-    }
-
-    function toImportPlan() {
-
-    }
-
-    $("#planForm").validate({
-        rules : {
-            startTime:"required",
-            endTime:"required",
-            file_plan : "required",
-        },
-        messages : {
-            startTime:"请输入开始时间",
-            endTime:"请输入结束时间",
-            file_plan : "请选择要导入的文件",
-        },
-        submitHandler:function(form){
-            ajaxSubmit('planForm','manage/lesson/importPlan',table,$('#planModal'));
-        }
-    });
-
-    function delLessonPlan(){
-        var selData = table.rows('.selected').data();
-        if(selData.length <= 0){
-            Alert("请选择相应的课程表！");
-            return false;
-        }
-        var deferred = $.Deferred();
-        Confirm({
-            msg: '确定要删除此课程表中的进度？',
-            onOk: function(){
-                var ids = [];
-                $.each(selData,function (i,obj) {
-                    ids.push(obj["ID"])
-                });
-                var url = fq.contextPath+"/manage/lesson/deletePlans";
-                url += "?ids="+ids;
-                $.post(url, function (result) {
-                    deferred.reject();
-                    if(result.success){
-                        alert("操作成功");
-                    }else {
-                        alert("操作失败");
-                    }
-                }, 'json');
-            },
-            onCancel: function(){
-                deferred.reject();
-            }
-        })
-    }
 </script>
