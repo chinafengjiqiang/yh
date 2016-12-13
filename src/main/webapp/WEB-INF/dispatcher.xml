@@ -23,7 +23,7 @@
 	<bean id="customObjectMapper" class="com.yh.utils.CustomObjectMapper"></bean>
 	
 	<!-- 配置静态资源，直接映射到对应的文件夹，不被DispatcherServlet处理，3.04新增功能，需要重新设置spring-mvc-3.0.xsd -->
-	<mvc:resources mapping="/resources/**" location="/resources/" />
+	<mvc:resources mapping="/app/**" location="/app/" />
 	<mvc:resources mapping="/static/**" location="/static/" />
 	<mvc:resources mapping="/commons/**" location="/commons/" />
 
